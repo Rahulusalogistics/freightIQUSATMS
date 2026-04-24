@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FreightIQ — The Ultimate TMS for Modern Trucking</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05080F;--bg2:#090D17;--bg3:#0D1220;--bg4:#111828;
+  --border:#1A2236;--b2:rgba(255,255,255,0.06);
+  --orange:#FF4D00;--o2:#FF7A3D;--amber:#FFB020;
+  --cyan:#00D4FF;--green:#00E5A0;--red:#FF3B5C;
+  --purple:#8B5CF6;--pink:#EC4899;
+  --text:#F0F4FF;--t2:#8B97B0;--t3:#3D4F6B;
+  --font:'IBM Plex Sans',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden}
+
+/* NOISE OVERLAY */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:rgba(5,8,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.logo-box{width:36px;height:36px;background:linear-gradient(135deg,var(--orange),var(--amber));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-name{font-family:var(--display);font-weight:800;font-size:20px;color:#fff;letter-spacing:.3px}
+.logo-name em{color:var(--orange);font-style:normal}
+.nav-links{display:flex;gap:4px}
+.nav-link{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;color:var(--t2);text-decoration:none;transition:all .2s;border:none;background:none;cursor:pointer;font-family:var(--font)}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-cta{display:flex;gap:8px;align-items:center}
+.btn{padding:9px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.btn-outline{background:transparent;color:var(--t2);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+.btn-primary{background:linear-gradient(135deg,var(--orange),var(--o2));color:#fff;box-shadow:0 3px 20px rgba(255,77,0,.25)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,77,0,.35)}
+.btn-lg{padding:14px 30px;font-size:15px;border-radius:12px}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 40px 60px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(255,77,0,.12) 0%,transparent 70%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:0;left:20%;width:400px;height:300px;background:radial-gradient(ellipse,rgba(0,212,255,.07) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,77,0,.08);border:1px solid rgba(255,77,0,.22);border-radius:30px;font-size:11px;font-weight:700;color:var(--orange);font-family:var(--mono);letter-spacing:.5px;margin-bottom:28px;text-transform:uppercase}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite;box-shadow:0 0 8px var(--orange)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+.hero-title{font-family:var(--display);font-size:clamp(42px,6vw,80px);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:22px}
+.hero-title span{background:linear-gradient(135deg,var(--orange),var(--amber),var(--o2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(15px,2vw,19px);color:var(--t2);line-height:1.7;max-width:580px;margin:0 auto 40px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.hero-stats{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}
+.hstat{text-align:center}
+.hstat-val{font-family:var(--display);font-size:28px;font-weight:800;color:#fff;line-height:1}
+.hstat-val span{color:var(--orange)}
+.hstat-label{font-size:11px;color:var(--t3);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+
+/* PREVIEW WINDOW */
+.preview-section{padding:0 40px 100px;max-width:1100px;margin:0 auto;position:relative}
+.preview-label{text-align:center;font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px}
+.preview-window{border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.06);background:var(--bg2);position:relative}
+.preview-titlebar{height:38px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:6px}
+.tbar-dot{width:10px;height:10px;border-radius:50%}
+.preview-url{margin-left:12px;flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;height:22px;display:flex;align-items:center;padding:0 10px;font-size:10px;color:var(--t3);font-family:var(--mono);max-width:340px}
+.preview-body{padding:24px;display:grid;grid-template-columns:180px 1fr;gap:16px;min-height:380px}
+.preview-sidebar{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 0;display:flex;flex-direction:column;gap:2px}
+.ps-item{padding:8px 14px;font-size:11px;font-weight:500;color:var(--t3);border-radius:8px;margin:0 6px;display:flex;align-items:center;gap:8px}
+.ps-item.on{background:rgba(255,77,0,.12);color:var(--orange);border:1px solid rgba(255,77,0,.18)}
+.ps-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.preview-content{display:flex;flex-direction:column;gap:12px}
+.preview-topbar{display:flex;justify-content:space-between;align-items:center}
+.preview-title{font-family:var(--display);font-size:18px;font-weight:800;color:#fff}
+.preview-btn{padding:6px 14px;background:linear-gradient(135deg,var(--orange),var(--o2));border:none;border-radius:7px;color:#fff;font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer}
+.preview-kgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.preview-kcard{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.pk-label{font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-family:var(--mono);margin-bottom:6px}
+.pk-val{font-family:var(--display);font-size:20px;font-weight:800;color:#fff;line-height:1}
+.pk-delta{font-size:10px;color:var(--green);margin-top:3px;font-weight:600}
+.preview-chart{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;flex:1}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px;padding-top:8px}
+.cbar{flex:1;border-radius:3px 3px 0 0;transition:all .3s}
+.preview-glow{position:absolute;top:-40px;right:-40px;width:300px;height:300px;background:radial-gradient(ellipse,rgba(255,77,0,.08) 0%,transparent 70%);pointer-events:none}
+
+/* MODES */
+.modes-section{padding:80px 40px;max-width:1100px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:56px}
+.section-tag{font-size:10px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;font-family:var(--mono);margin-bottom:12px}
+.section-title{font-family:var(--display);font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.5px;line-height:1.15;margin-bottom:14px}
+.section-sub{font-size:16px;color:var(--t2);line-height:1.6;max-width:500px;margin:0 auto}
+.modes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.mode-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
+.mode-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:20px}
+.mode-card.carrier::before{background:linear-gradient(135deg,rgba(255,77,0,.06),transparent)}
+.mode-card.broker::before{background:linear-gradient(135deg,rgba(0,212,255,.06),transparent)}
+.mode-card.shipper::before{background:linear-gradient(135deg,rgba(139,92,246,.06),transparent)}
+.mode-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.1)}
+.mode-card:hover::before{opacity:1}
+.mode-icon{font-size:32px;margin-bottom:16px}
+.mode-name{font-family:var(--display);font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
+.mode-desc{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:20px}
+.mode-features{display:flex;flex-direction:column;gap:8px}
+.mf-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2)}
+.mf-check{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.carrier .mf-check{background:rgba(255,77,0,.15);color:var(--orange)}
+.broker .mf-check{background:rgba(0,212,255,.15);color:var(--cyan)}
+.shipper .mf-check{background:rgba(139,92,246,.15);color:var(--purple)}
+.mode-badge{position:absolute;top:20px;right:20px;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:700;font-family:var(--mono);letter-spacing:.5px}
+.carrier .mode-badge{background:rgba(255,77,0,.12);color:var(--orange);border:1px solid rgba(255,77,0,.2)}
+.broker .mode-badge{background:rgba(0,212,255,.12);color:var(--cyan);border:1px solid rgba(0,212,255,.2)}
+.shipper .mode-badge{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.2)}
+
+/* FEATURES */
+.features-section{padding:80px 40px;max-width:1100px;margin:0 auto}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.feat-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;transition:all .22s;position:relative;overflow:hidden}
+.feat-card:hover{border-color:rgba(255,77,0,.2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.feat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),var(--amber));opacity:0;transition:opacity .3s}
+.feat-card:hover::after{opacity:1}
+.feat-emoji{font-size:26px;margin-bottom:14px;display:block}
+.feat-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:6px;font-family:var(--display)}
+.feat-desc{font-size:12px;color:var(--t2);line-height:1.55}
+.feat-new{display:inline-block;margin-top:10px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green);font-size:8px;font-weight:700;padding:2px 8px;border-radius:4px;font-family:var(--mono);letter-spacing:.8px}
+.feat-core{display:inline-block;margin-top:10px;background:rgba(255,77,0,.08);border:1px solid rgba(255,77,0,.18);color:var(--orange);font-size:8px;font-weight:700;padding:2px 8px;border-radius:4px;font-family:var(--mono);letter-spacing:.8px}
+
+/* AI SECTION */
+.ai-section{padding:80px 40px;max-width:1100px;margin:0 auto}
+.ai-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.ai-info .section-tag{text-align:left}
+.ai-info .section-title{text-align:left;font-size:36px}
+.ai-info .section-sub{text-align:left;margin:0 0 28px;max-width:none}
+.ai-capabilities{display:flex;flex-direction:column;gap:12px}
+.ai-cap{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;transition:border-color .2s}
+.ai-cap:hover{border-color:rgba(255,77,0,.2)}
+.ai-cap-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ai-cap-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px}
+.ai-cap-desc{font-size:12px;color:var(--t2);line-height:1.5}
+.ai-chat-preview{background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.acp-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(255,77,0,.06),transparent)}
+.acp-orb{width:36px;height:36px;background:linear-gradient(135deg,var(--orange),var(--cyan));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;animation:orbpulse 3s ease-in-out infinite}
+@keyframes orbpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,0,.3)}50%{box-shadow:0 0 0 8px rgba(255,77,0,.0)}}
+.acp-name{font-family:var(--display);font-size:15px;font-weight:700;color:#fff}
+.acp-status{font-size:10px;color:var(--green);font-family:var(--mono)}
+.acp-msgs{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.acp-msg{max-width:80%;padding:10px 14px;border-radius:12px;font-size:12px;line-height:1.55}
+.acp-msg.ai{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px 12px 12px 12px;align-self:flex-start}
+.acp-msg.user{background:linear-gradient(135deg,var(--orange),var(--o2));color:#fff;border-radius:12px 4px 12px 12px;align-self:flex-end}
+.acp-input{margin:0 18px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.acp-placeholder{font-size:11px;color:var(--t3);font-family:var(--font)}
+.acp-send{width:28px;height:28px;background:linear-gradient(135deg,var(--orange),var(--o2));border:none;border-radius:7px;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff}
+
+/* METRICS */
+.metrics-section{padding:80px 40px;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.metrics-inner{max-width:1100px;margin:0 auto}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+.metric-card{text-align:center;padding:28px 20px;position:relative}
+.metric-card::after{content:'';position:absolute;right:0;top:20%;bottom:20%;width:1px;background:var(--border)}
+.metric-card:last-child::after{display:none}
+.metric-num{font-family:var(--display);font-size:42px;font-weight:800;line-height:1;margin-bottom:8px}
+.metric-num.orange{color:var(--orange)}
+.metric-num.green{color:var(--green)}
+.metric-num.cyan{color:var(--cyan)}
+.metric-num.amber{color:var(--amber)}
+.metric-label{font-size:13px;color:var(--t2);line-height:1.4}
+.metric-sub{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+
+/* TECH STACK */
+.tech-section{padding:80px 40px;max-width:1100px;margin:0 auto}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.tech-pill{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all .2s;text-align:center}
+.tech-pill:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px)}
+.tech-icon{font-size:24px}
+.tech-name{font-size:12px;font-weight:600;color:var(--text)}
+.tech-type{font-size:10px;color:var(--t3);font-family:var(--mono)}
+
+/* CTA */
+.cta-section{padding:100px 40px;text-align:center;position:relative;overflow:hidden}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(255,77,0,.1) 0%,transparent 70%);pointer-events:none}
+.cta-section .section-title{font-size:clamp(32px,4vw,56px);margin-bottom:16px}
+.cta-section .section-sub{margin-bottom:36px;font-size:17px}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.cta-note{margin-top:18px;font-size:12px;color:var(--t3);font-family:var(--mono)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:40px 40px 32px;max-width:1100px;margin:0 auto}
+.footer-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px;margin-bottom:32px}
+.footer-brand .logo-name{font-size:18px;margin-bottom:8px}
+.footer-tagline{font-size:12px;color:var(--t3);max-width:200px;line-height:1.5}
+.footer-links{display:flex;gap:40px;flex-wrap:wrap}
+.footer-col h4{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:2px;font-family:var(--mono);margin-bottom:14px}
+.footer-col a{display:block;font-size:13px;color:var(--t2);text-decoration:none;margin-bottom:8px;transition:color .2s}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.footer-copy{font-size:12px;color:var(--t3);font-family:var(--mono)}
+.footer-socials{display:flex;gap:8px}
+.social-btn{width:32px;height:32px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;text-decoration:none;transition:all .2s}
+.social-btn:hover{border-color:rgba(255,77,0,.3);background:rgba(255,77,0,.08)}
+
+/* SCROLL ANIMATION */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .hero{padding:90px 20px 50px}
+  .preview-section,.modes-section,.features-section,.ai-section,.tech-section,.cta-section{padding:60px 20px}
+  .ai-wrap{grid-template-columns:1fr}
+  .preview-body{grid-template-columns:1fr;min-height:auto}
+  .preview-sidebar{display:none}
+  footer{padding:40px 20px 24px}
+  .footer-inner{flex-direction:column}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .metrics-section{padding:60px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-box">🚛</div>
+    <div class="logo-name">Freight<em>IQ</em></div>
+  </div>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#modes" class="nav-link">Modes</a>
+    <a href="#ai" class="nav-link">AI Assistant</a>
+    <a href="#about" class="nav-link">About</a>
+  </div>
+  <div class="nav-cta">
+    <a href="app.html" class="btn btn-outline">Sign In</a>
+    <a href="app.html" class="btn btn-primary">🚀 Launch App</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-badge"><div class="badge-dot"></div>Now Live — DAT Integration Active</div>
+  <h1 class="hero-title">
+    The Smartest TMS<br>for <span>Modern Trucking</span>
+  </h1>
+  <p class="hero-sub">FreightIQ puts carriers, brokers, and shippers in full control — with real-time tracking, AI-powered rate negotiation, instant factoring, and automated compliance in one platform.</p>
+  <div class="hero-btns">
+    <a href="app.html" class="btn btn-primary btn-lg">🚛 Open Live Demo</a>
+    <a href="#features" class="btn btn-ghost btn-lg">Explore Features ↓</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-val">$<span>24.8K</span></div><div class="hstat-label">Monthly Revenue Tracked</div></div>
+    <div class="hstat"><div class="hstat-val"><span>3</span> Modes</div><div class="hstat-label">Carrier · Broker · Shipper</div></div>
+    <div class="hstat"><div class="hstat-val"><span>20+</span></div><div class="hstat-label">Built-in Features</div></div>
+    <div class="hstat"><div class="hstat-val"><span>$5.24</span>/mi</div><div class="hstat-label">Avg Rate Performance</div></div>
+  </div>
+</section>
+
+<!-- APP PREVIEW -->
+<div class="preview-section reveal">
+  <div class="preview-label">// Live Application Preview</div>
+  <div class="preview-window">
+    <div class="preview-titlebar">
+      <div class="tbar-dot" style="background:#FF5F57"></div>
+      <div class="tbar-dot" style="background:#FFBD2E"></div>
+      <div class="tbar-dot" style="background:#28C840"></div>
+      <div class="preview-url">freightiq.app · Carrier Dashboard</div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-sidebar">
+        <div class="ps-item on"><div class="ps-dot"></div> Dashboard</div>
+        <div class="ps-item"><div class="ps-dot"></div> Load Search</div>
+        <div class="ps-item"><div class="ps-dot"></div> Live Tracking</div>
+        <div class="ps-item"><div class="ps-dot"></div> AI Chat</div>
+        <div class="ps-item"><div class="ps-dot"></div> Invoices</div>
+        <div class="ps-item"><div class="ps-dot"></div> Factoring</div>
+        <div class="ps-item"><div class="ps-dot"></div> Rate Negotiator</div>
+        <div class="ps-item"><div class="ps-dot"></div> ELD / HOS</div>
+        <div class="ps-item"><div class="ps-dot"></div> Doc Vault</div>
+      </div>
+      <div class="preview-content">
+        <div class="preview-topbar">
+          <div class="preview-title">Good morning, Mike 👋</div>
+          <button class="preview-btn">+ Add Load</button>
+        </div>
+        <div class="preview-kgrid">
+          <div class="preview-kcard"><div class="pk-label">Monthly Revenue</div><div class="pk-val">$24,800</div><div class="pk-delta">↑ 18% vs last month</div></div>
+          <div class="preview-kcard"><div class="pk-label">Active Loads</div><div class="pk-val" style="color:var(--cyan)">3</div><div class="pk-delta" style="color:var(--cyan)">All trucks running</div></div>
+          <div class="preview-kcard"><div class="pk-label">Avg $/Mile</div><div class="pk-val" style="color:var(--orange)">$5.24</div><div class="pk-delta">↑ above mkt avg</div></div>
+        </div>
+        <div class="preview-chart">
+          <div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:12px;">WEEKLY REVENUE</div>
+          <div class="chart-bars">
+            <div class="cbar" style="height:45%;background:rgba(255,77,0,.35)"></div>
+            <div class="cbar" style="height:62%;background:rgba(255,77,0,.4)"></div>
+            <div class="cbar" style="height:38%;background:rgba(255,77,0,.35)"></div>
+            <div class="cbar" style="height:75%;background:rgba(255,77,0,.45)"></div>
+            <div class="cbar" style="height:55%;background:rgba(255,77,0,.4)"></div>
+            <div class="cbar" style="height:88%;background:var(--orange)"></div>
+            <div class="cbar" style="height:70%;background:rgba(255,77,0,.45)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="preview-glow"></div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-section" id="about">
+  <div class="metrics-inner">
+    <div class="metrics-grid">
+      <div class="metric-card reveal">
+        <div class="metric-num orange">20+</div>
+        <div class="metric-label">Built-in modules</div>
+        <div class="metric-sub">All-in-one platform</div>
+      </div>
+      <div class="metric-card reveal" style="transition-delay:.1s">
+        <div class="metric-num green">3</div>
+        <div class="metric-label">Operator modes</div>
+        <div class="metric-sub">Carrier · Broker · Shipper</div>
+      </div>
+      <div class="metric-card reveal" style="transition-delay:.2s">
+        <div class="metric-num cyan">Real-time</div>
+        <div class="metric-label">DAT live feed integration</div>
+        <div class="metric-sub">Market data</div>
+      </div>
+      <div class="metric-card reveal" style="transition-delay:.3s">
+        <div class="metric-num amber">AI</div>
+        <div class="metric-label">Powered negotiation engine</div>
+        <div class="metric-sub">Smart rate analysis</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODES -->
+<section id="modes" class="modes-section">
+  <div class="section-header reveal">
+    <div class="section-tag">// Platform Modes</div>
+    <h2 class="section-title">Built for Every<br>Player in Freight</h2>
+    <p class="section-sub">One platform, three powerful operating modes — each tailored for how you actually work.</p>
+  </div>
+  <div class="modes-grid">
+    <div class="mode-card carrier reveal">
+      <div class="mode-badge">CARRIER</div>
+      <div class="mode-icon">🚛</div>
+      <div class="mode-name">Carrier Pro</div>
+      <div class="mode-desc">Run your trucking operation like a business. Track loads, manage drivers, handle finances, and stay compliant — all from one dashboard.</div>
+      <div class="mode-features">
+        <div class="mf-item"><div class="mf-check">✓</div>Real-time load board with 14 live loads</div>
+        <div class="mf-item"><div class="mf-check">✓</div>ELD / HOS compliance monitoring</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Instant factoring with same-day pay</div>
+        <div class="mf-item"><div class="mf-check">✓</div>IFTA report automation</div>
+        <div class="mf-item"><div class="mf-check">✓</div>AI rate negotiation coach</div>
+      </div>
+    </div>
+    <div class="mode-card broker reveal" style="transition-delay:.1s">
+      <div class="mode-badge">BROKER</div>
+      <div class="mode-icon">🏢</div>
+      <div class="mode-name">Broker Pro</div>
+      <div class="mode-desc">Manage your carrier network, book loads faster, and optimize margins with real-time market intelligence and automated dispatch workflows.</div>
+      <div class="mode-features">
+        <div class="mf-item"><div class="mf-check">✓</div>Carrier network management</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Load board & automated dispatch</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Margin optimization tools</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Credit & collections dashboard</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Customer relationship tracking</div>
+      </div>
+    </div>
+    <div class="mode-card shipper reveal" style="transition-delay:.2s">
+      <div class="mode-badge">SHIPPER</div>
+      <div class="mode-icon">📦</div>
+      <div class="mode-name">Shipper Pro</div>
+      <div class="mode-desc">Get instant rate quotes, track every shipment in real time, and manage your supply chain with full visibility from pickup to delivery.</div>
+      <div class="mode-features">
+        <div class="mf-item"><div class="mf-check">✓</div>Instant multi-carrier rate quotes</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Live GPS shipment tracking</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Vendor & PO management</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Claims management portal</div>
+        <div class="mf-item"><div class="mf-check">✓</div>Carbon footprint reporting</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="section-header reveal">
+    <div class="section-tag">// Full Feature Set</div>
+    <h2 class="section-title">Everything You Need.<br>Nothing You Don't.</h2>
+    <p class="section-sub">20+ purpose-built modules that replace 5 different tools you're probably paying for right now.</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card reveal">
+      <span class="feat-emoji">◈</span>
+      <div class="feat-name">Smart Dashboard</div>
+      <div class="feat-desc">KPI overview with live revenue, loads, margins, and expense tracking. Everything at a glance.</div>
+      <span class="feat-core">CORE</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.05s">
+      <span class="feat-emoji">🔍</span>
+      <div class="feat-name">Load Search</div>
+      <div class="feat-desc">Live DAT-powered load board with smart filtering by lane, rate, weight, and equipment type.</div>
+      <span class="feat-core">CORE</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.1s">
+      <span class="feat-emoji">📍</span>
+      <div class="feat-name">Live Tracking</div>
+      <div class="feat-desc">Real-time GPS tracking for every truck and load. Live ETA updates and geofence alerts.</div>
+      <span class="feat-core">CORE</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.15s">
+      <span class="feat-emoji">🤖</span>
+      <div class="feat-name">AI Chat Assistant</div>
+      <div class="feat-desc">Ask anything about your loads, rates, compliance, or cash flow. Instant AI-powered answers.</div>
+      <span class="feat-new">NEW</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.2s">
+      <span class="feat-emoji">📄</span>
+      <div class="feat-name">Invoice Manager</div>
+      <div class="feat-desc">Auto-generate, send, and track invoices. Know which are paid, pending, or overdue at all times.</div>
+      <span class="feat-core">CORE</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.25s">
+      <span class="feat-emoji">⚡</span>
+      <div class="feat-name">Instant Factoring</div>
+      <div class="feat-desc">Get paid in 24 hours. Connect with top factoring companies directly — no paperwork, no waiting.</div>
+      <span class="feat-new">NEW</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.3s">
+      <span class="feat-emoji">🤝</span>
+      <div class="feat-name">Rate Negotiator</div>
+      <div class="feat-desc">AI-powered lane-by-lane rate analysis. Know your walkaway number before you pick up the phone.</div>
+      <span class="feat-new">NEW</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.35s">
+      <span class="feat-emoji">📡</span>
+      <div class="feat-name">ELD / HOS Monitoring</div>
+      <div class="feat-desc">Stay FMCSA compliant with real-time Hours of Service tracking and automatic violation alerts.</div>
+      <span class="feat-new">NEW</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.4s">
+      <span class="feat-emoji">🗄️</span>
+      <div class="feat-name">Doc Vault</div>
+      <div class="feat-desc">Secure storage for BOLs, rate confirmations, insurance certs, and all your critical documents.</div>
+      <span class="feat-new">NEW</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.45s">
+      <span class="feat-emoji">📊</span>
+      <div class="feat-name">IFTA Reports</div>
+      <div class="feat-desc">Automated quarterly IFTA fuel tax reporting. Stop doing math — let FreightIQ calculate it for you.</div>
+      <span class="feat-core">CORE</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.5s">
+      <span class="feat-emoji">🧾</span>
+      <div class="feat-name">Expense Tracker</div>
+      <div class="feat-desc">Log fuel, maintenance, tolls, and driver pay. Full P&L breakdown with category analysis.</div>
+      <span class="feat-new">NEW</span>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.55s">
+      <span class="feat-emoji">👤</span>
+      <div class="feat-name">Driver Management</div>
+      <div class="feat-desc">Track driver performance, CDL expiry, safety scores, and assign loads from a single view.</div>
+      <span class="feat-core">CORE</span>
+    </div>
+  </div>
+</section>
+
+<!-- AI SECTION -->
+<section id="ai" class="ai-section">
+  <div class="ai-wrap">
+    <div class="ai-info">
+      <div class="section-tag reveal">// AI-Powered Intelligence</div>
+      <h2 class="section-title reveal">Your 24/7 Freight<br>Expert On-Call</h2>
+      <p class="section-sub reveal">Ask FreightIQ AI anything — from "what rate should I accept on this Chicago to Dallas lane?" to "am I IFTA compliant this quarter?" Get instant, data-backed answers.</p>
+      <div class="ai-capabilities reveal">
+        <div class="ai-cap">
+          <div class="ai-cap-icon" style="background:rgba(255,77,0,.12)">💬</div>
+          <div><div class="ai-cap-title">Natural Language Queries</div><div class="ai-cap-desc">Ask questions in plain English about your loads, revenue, and operations.</div></div>
+        </div>
+        <div class="ai-cap">
+          <div class="ai-cap-icon" style="background:rgba(0,229,160,.12)">📈</div>
+          <div><div class="ai-cap-title">Rate Market Intelligence</div><div class="ai-cap-desc">Real-time lane analysis with recommended rates and negotiation tactics.</div></div>
+        </div>
+        <div class="ai-cap">
+          <div class="ai-cap-icon" style="background:rgba(0,212,255,.12)">⚡</div>
+          <div><div class="ai-cap-title">Instant Compliance Help</div><div class="ai-cap-desc">HOS, IFTA, DOT regulations explained instantly — no lawyer needed.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="ai-chat-preview reveal">
+      <div class="acp-hdr">
+        <div class="acp-orb">🤖</div>
+        <div><div class="acp-name">FreightIQ AI</div><div class="acp-status">● Online · DAT Connected</div></div>
+      </div>
+      <div class="acp-msgs">
+        <div class="acp-msg user">What rate should I accept on CHI → DAL this week?</div>
+        <div class="acp-msg ai">Based on current DAT spot rates, the CHI → DAL lane is running <strong>$3.42–$3.89/mi</strong> for 53' dry van. With fuel at $3.68, your breakeven is ~$2.90/mi. <br><br>My recommendation: <strong>don't accept below $3.60/mi</strong>. Rates trend up Thu–Fri — worth waiting if you have flexibility. 🔥</div>
+        <div class="acp-msg user">Am I HOS compliant for tomorrow's load?</div>
+        <div class="acp-msg ai">✅ Driver #1 (Mike T.) has <strong>9h 22min remaining</strong> on their 11-hour drive limit and is reset after a 34-hour restart. You're clear for the 480mi run. Driver #2 (James R.) is at 8h 45min — <strong>schedule tomorrow's pickup after 6 AM</strong> to avoid a violation.</div>
+      </div>
+      <div class="acp-input">
+        <div class="acp-placeholder">Ask anything about your fleet...</div>
+        <div class="acp-send">↑</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section class="tech-section">
+  <div class="section-header reveal">
+    <div class="section-tag">// Built With</div>
+    <h2 class="section-title">Modern Tech Stack</h2>
+    <p class="section-sub">Built with battle-tested technologies for performance, reliability, and a beautiful user experience.</p>
+  </div>
+  <div class="tech-grid reveal">
+    <div class="tech-pill"><div class="tech-icon">🌐</div><div class="tech-name">HTML5</div><div class="tech-type">Structure</div></div>
+    <div class="tech-pill"><div class="tech-icon">🎨</div><div class="tech-name">CSS3</div><div class="tech-type">Styling</div></div>
+    <div class="tech-pill"><div class="tech-icon">⚡</div><div class="tech-name">Vanilla JS</div><div class="tech-type">Interactivity</div></div>
+    <div class="tech-pill"><div class="tech-icon">🗺️</div><div class="tech-name">DAT API</div><div class="tech-type">Live Rates</div></div>
+    <div class="tech-pill"><div class="tech-icon">🤖</div><div class="tech-name">AI Engine</div><div class="tech-type">Intelligence</div></div>
+    <div class="tech-pill"><div class="tech-icon">📱</div><div class="tech-name">Responsive</div><div class="tech-type">All Devices</div></div>
+    <div class="tech-pill"><div class="tech-icon">🚀</div><div class="tech-name">GitHub Pages</div><div class="tech-type">Hosting</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="section-tag reveal">// Get Started</div>
+  <h2 class="section-title reveal">Ready to Modernize<br>Your Operation?</h2>
+  <p class="section-sub reveal" style="max-width:480px;margin:0 auto 36px">FreightIQ is live and ready to demo. Explore the full platform — no signup required.</p>
+  <div class="cta-btns reveal">
+    <a href="app.html" class="btn btn-primary btn-lg">🚛 Open FreightIQ App</a>
+    <a href="https://github.com" class="btn btn-ghost btn-lg">⭐ Star on GitHub</a>
+  </div>
+  <div class="cta-note reveal">Free to use · Open source · No credit card required</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo" style="margin-bottom:10px">
+        <div class="logo-box">🚛</div>
+        <div class="logo-name">Freight<em>IQ</em></div>
+      </div>
+      <div class="footer-tagline">The smartest TMS for modern trucking. Built for carriers, brokers, and shippers.</div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="app.html">Carrier Mode</a>
+        <a href="app.html">Broker Mode</a>
+        <a href="app.html">Shipper Mode</a>
+        <a href="app.html">AI Assistant</a>
+      </div>
+      <div class="footer-col">
+        <h4>Features</h4>
+        <a href="app.html">Load Search</a>
+        <a href="app.html">Live Tracking</a>
+        <a href="app.html">Factoring</a>
+        <a href="app.html">Rate Negotiator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Project</h4>
+        <a href="https://github.com">GitHub Repo</a>
+        <a href="app.html">Live Demo</a>
+        <a href="#">Roadmap</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 FreightIQ · Built with ❤️ · MIT License</div>
+    <div class="footer-socials">
+      <a href="https://github.com" class="social-btn" title="GitHub">🐙</a>
+      <a href="#" class="social-btn" title="Twitter">🐦</a>
+      <a href="#" class="social-btn" title="LinkedIn">💼</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+// Animate chart bars on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.cbar').forEach((bar, i) => {
+    const h = bar.style.height;
+    bar.style.height = '0%';
+    setTimeout(() => { bar.style.height = h; }, 400 + i * 80);
+  });
+});
+</script>
+</body>
+</html>
