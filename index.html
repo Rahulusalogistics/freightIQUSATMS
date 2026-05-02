@@ -2,763 +2,1013 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FreightIQ — Ultimate TMS</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FreightIQ USA — AI-Powered TMS Platform</title>
+<meta name="description" content="The unified AI TMS for premium freight, OTR, and intermodal. Pharma, healthcare, produce, hot shot. Instant carrier payment. Reliability-first AI matching."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#05080F;--bg2:#090D17;--bg3:#0D1220;--bg4:#111828;
-  --border:#1A2236;--b2:rgba(255,255,255,0.06);
-  --orange:#FF4D00;--o2:#FF7A3D;--amber:#FFB020;
-  --cyan:#00D4FF;--green:#00E5A0;--red:#FF3B5C;
-  --purple:#8B5CF6;--pink:#EC4899;
-  --text:#F0F4FF;--t2:#8B97B0;--t3:#3D4F6B;
-  --font:'IBM Plex Sans',sans-serif;
-  --mono:'IBM Plex Mono',monospace;
-  --display:'Syne',sans-serif;
+  --bg:#05070e;--bg2:#090c18;--bg3:#0d1120;--bg4:#111827;--bg5:#161d2e;
+  --blue:#2563eb;--blue2:#1d4ed8;--blue-lt:#60a5fa;--cyan:#22d3ee;--cyan2:#06b6d4;
+  --green:#10b981;--green-lt:#34d399;--green2:#059669;
+  --amber:#f59e0b;--amber2:#d97706;--red:#ef4444;--purple:#8b5cf6;
+  --white:#f8fafc;--off:#cbd5e1;--muted:#64748b;--dim:#334155;
+  --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.1);
+  --r:10px;--r2:16px;--r3:22px;
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;line-height:1.6}
+::selection{background:rgba(37,99,235,.4);color:#fff}
+.mono{font-family:'JetBrains Mono',monospace}
 
-/* TOPBAR */
-.topbar{position:fixed;top:0;left:0;right:0;z-index:500;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(5,8,15,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-box{width:34px;height:34px;background:linear-gradient(135deg,var(--orange),var(--amber));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.logo-name{font-family:var(--display);font-weight:800;font-size:19px;color:#fff;letter-spacing:.3px}
-.logo-name em{color:var(--orange);font-style:normal}
-.topbar-center{display:flex;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:3px}
-.ttab{padding:5px 16px;border-radius:7px;border:none;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--t2);background:transparent;letter-spacing:.3px}
-.ttab.on{background:linear-gradient(135deg,var(--orange),var(--o2));color:#fff;box-shadow:0 2px 14px rgba(255,77,0,.3)}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.live-tag{display:flex;align-items:center;gap:5px;padding:4px 12px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);border-radius:20px;font-size:10px;font-weight:600;color:var(--green);font-family:var(--mono)}
-.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:ldot 2s infinite}
-@keyframes ldot{0%,100%{opacity:1}50%{opacity:.3}}
-.notif-btn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:15px}
-.notif-count{position:absolute;top:-3px;right:-3px;width:14px;height:14px;background:var(--orange);border-radius:50%;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--mono)}
-.avatar{width:34px;height:34px;background:linear-gradient(135deg,var(--orange),var(--amber));border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:13px;color:#fff;cursor:pointer}
+/* ═══ AMBIENT ═══ */
+#ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.amb-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.6}
+.amb-1{width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,235,.14),transparent 70%);top:-10%;left:-15%;animation:aorb1 22s ease-in-out infinite}
+.amb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(6,182,212,.09),transparent 70%);top:30%;right:-10%;animation:aorb2 28s ease-in-out infinite}
+.amb-3{width:400px;height:400px;background:radial-gradient(circle,rgba(16,185,129,.07),transparent 70%);bottom:0;left:30%;animation:aorb3 20s ease-in-out infinite}
+@keyframes aorb1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+@keyframes aorb2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,60px)}}
+@keyframes aorb3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+.grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(37,99,235,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.025) 1px,transparent 1px);
+  background-size:48px 48px}
 
-/* LAYOUT */
-.wrap{display:flex;padding-top:54px;min-height:100vh}
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 4%;
+  background:rgba(5,7,14,.88);backdrop-filter:blur(28px) saturate(180%);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:.6rem;font-size:1.05rem;font-weight:800;letter-spacing:-.02em;text-decoration:none;color:var(--white)}
+.brand-icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;box-shadow:0 0 18px rgba(37,99,235,.55)}
+.brand-sub{color:var(--cyan)}
+.nav-links{display:flex;gap:.15rem}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:500;padding:.38rem .75rem;border-radius:6px;transition:all .18s}
+.nav-links a:hover{color:var(--white);background:rgba(255,255,255,.06)}
+.nav-actions{display:flex;align-items:center;gap:.6rem}
+.n-ghost{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:600;padding:.4rem .9rem;border-radius:7px;border:1px solid var(--border2);transition:all .2s}
+.n-ghost:hover{color:var(--white);background:rgba(255,255,255,.06)}
+.n-cta{background:var(--blue);color:#fff;font-size:.82rem;font-weight:700;padding:.4rem 1rem;border-radius:7px;text-decoration:none;transition:all .2s;box-shadow:0 0 18px rgba(37,99,235,.4)}
+.n-cta:hover{background:#1d4ed8;transform:translateY(-1px)}
 
-/* SIDEBAR */
-.sidebar{width:210px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:54px;bottom:0;left:0;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
-.sb-section{padding:16px 10px 6px;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono)}
-.nitem{display:flex;align-items:center;gap:9px;padding:8px 12px;margin:1px 8px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);border:none;background:none;width:calc(100% - 16px);text-align:left;font-family:var(--font);transition:all .15s;position:relative}
-.nitem:hover{background:var(--bg3);color:var(--text)}
-.nitem.on{background:linear-gradient(135deg,rgba(255,77,0,.15),rgba(255,122,61,.07));color:var(--orange);border:1px solid rgba(255,77,0,.18)}
-.ni-icon{width:17px;text-align:center;font-size:14px;flex-shrink:0}
-.ni-badge{margin-left:auto;background:var(--orange);color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;font-family:var(--mono)}
-.ni-new{margin-left:auto;background:var(--green);color:#000;font-size:8px;font-weight:700;padding:1px 6px;border-radius:8px;font-family:var(--mono)}
-.sb-bottom{margin-top:auto;padding:10px}
-.plan-card{background:linear-gradient(135deg,rgba(255,77,0,.1),rgba(255,176,32,.05));border:1px solid rgba(255,77,0,.22);border-radius:12px;padding:12px}
-.plan-title{font-family:var(--display);font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
-.plan-sub{font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.4}
-.plan-btn{width:100%;padding:7px;background:linear-gradient(135deg,var(--orange),var(--o2));border:none;border-radius:7px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font)}
+/* ═══ HERO ═══ */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 5% 4rem;text-align:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.18);color:var(--cyan);border-radius:999px;padding:.28rem .9rem;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:1.75rem}
+.pulse-ring{position:relative;width:8px;height:8px}
+.pulse-ring::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--cyan);animation:pring 2s ease-out infinite}
+.pulse-ring::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1.5px solid var(--cyan);opacity:.5;animation:pring2 2s ease-out infinite .3s}
+@keyframes pring{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+@keyframes pring2{0%{transform:scale(1);opacity:.5}100%{transform:scale(2.5);opacity:0}}
+h1{font-size:clamp(2.6rem,7vw,5.8rem);font-weight:900;line-height:1.04;letter-spacing:-.035em;margin-bottom:1.5rem}
+.grad-text{background:linear-gradient(135deg,#60a5fa 0%,#22d3ee 45%,#34d399 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1rem,2vw,1.18rem);color:var(--muted);max-width:660px;margin:0 auto 2.5rem;line-height:1.8}
+.hero-sub strong{color:var(--off);font-weight:600}
+.hero-btns{display:flex;gap:.875rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
+.btn-main{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--blue) 0%,#1e40af 100%);color:#fff;padding:.875rem 1.875rem;border-radius:10px;font-size:.9rem;font-weight:700;text-decoration:none;box-shadow:0 0 44px rgba(37,99,235,.45),inset 0 1px 0 rgba(255,255,255,.12);transition:all .25s}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 0 64px rgba(37,99,235,.55)}
+.btn-sec{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--off);padding:.875rem 1.875rem;border-radius:10px;font-size:.9rem;font-weight:600;text-decoration:none;transition:all .25s}
+.btn-sec:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);transform:translateY(-2px)}
+.proof-bar{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;padding:1.5rem 2.5rem;border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+.proof-item{text-align:center}
+.proof-n{font-size:1.7rem;font-weight:900;letter-spacing:-.03em;background:linear-gradient(135deg,var(--blue-lt),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.proof-n.g{background:linear-gradient(135deg,var(--green-lt),#22d3ee);-webkit-background-clip:text;background-clip:text}
+.proof-n.a{background:linear-gradient(135deg,var(--amber),#f97316);-webkit-background-clip:text;background-clip:text}
+.proof-l{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-top:.2rem}
 
-/* MAIN */
-.main{margin-left:210px;flex:1;padding:24px;min-height:calc(100vh - 54px)}
+/* ═══ TICKER ═══ */
+.ticker{overflow:hidden;background:rgba(37,99,235,.055);border-top:1px solid rgba(37,99,235,.1);border-bottom:1px solid rgba(37,99,235,.1);padding:.65rem 0;z-index:1;position:relative}
+.ticker-inner{display:flex;gap:5rem;white-space:nowrap;animation:tick 38s linear infinite}
+.tick-i{font-size:.76rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:.45rem}
+.tick-i b{color:var(--cyan)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* SCREENS */
-.scr{display:none}.scr.on{display:block;animation:fadeUp .22s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* ═══ TMS DASHBOARD ═══ */
+#tms-demo{padding:5rem 4%;z-index:1;position:relative}
+.demo-eyebrow{text-align:center;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:.75rem}
+.demo-h{text-align:center;font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-.025em;margin-bottom:.6rem}
+.demo-sub{text-align:center;color:var(--muted);font-size:.94rem;max-width:560px;margin:0 auto 3rem;line-height:1.7}
 
-/* PAGE HDR */
-.phdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.plabel{font-size:9px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;font-family:var(--mono);margin-bottom:4px}
-.ptitle{font-family:var(--display);font-size:24px;font-weight:800;color:#fff;letter-spacing:-.2px}
-.psub{font-size:13px;color:var(--t2);margin-top:3px}
-.pactions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* Browser Frame */
+.browser{border-radius:18px;overflow:hidden;border:1px solid rgba(37,99,235,.22);box-shadow:0 0 100px rgba(37,99,235,.14),0 0 40px rgba(6,182,212,.06),0 60px 100px rgba(0,0,0,.6);background:var(--bg2)}
+.browser-bar{background:var(--bg3);padding:.65rem 1rem;display:flex;align-items:center;gap:.55rem;border-bottom:1px solid var(--border)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.addr{flex:1;background:var(--bg4);border-radius:5px;padding:.28rem .75rem;font-size:.7rem;color:var(--muted);margin:0 .75rem;font-family:'JetBrains Mono',monospace}
+.addr em{color:var(--cyan);font-style:normal}
+.status-live{font-size:.68rem;font-weight:700;color:var(--green-lt);display:flex;align-items:center;gap:.3rem;font-family:'JetBrains Mono',monospace}
+.dot-live{width:5px;height:5px;border-radius:50%;background:var(--green-lt);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
-/* BTNS */
-.btn{padding:8px 18px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;transition:all .18s}
-.btn-p{background:linear-gradient(135deg,var(--orange),var(--o2));color:#fff;box-shadow:0 3px 14px rgba(255,77,0,.22)}
-.btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,77,0,.32)}
-.btn-g{background:var(--bg3);color:var(--t2);border:1px solid var(--border)}
-.btn-g:hover{color:var(--text)}
-.btn-purple{background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff}
-.btn-green{background:linear-gradient(135deg,var(--green),#00B4D8);color:#000;font-weight:700}
+/* TMS Shell */
+.tms-shell{display:grid;grid-template-columns:200px 1fr;min-height:580px}
 
-/* CARDS */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px}
-.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:16px}
+/* Sidebar */
+.tms-nav{background:var(--bg3);border-right:1px solid var(--border);padding:1rem 0;display:flex;flex-direction:column}
+.tms-nav-logo{padding:.5rem 1rem 1rem;display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:800;color:var(--white);border-bottom:1px solid var(--border);margin-bottom:.75rem}
+.tms-nav-logo span{color:var(--cyan)}
+.tms-nav-section{padding:0 .6rem;margin-bottom:1.25rem}
+.tms-nav-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);padding:.1rem .55rem;margin-bottom:.35rem}
+.tms-nav-item{display:flex;align-items:center;gap:.55rem;padding:.42rem .55rem;border-radius:6px;font-size:.79rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s;margin-bottom:.05rem}
+.tms-nav-item:hover{background:rgba(37,99,235,.12);color:var(--off)}
+.tms-nav-item.on{background:rgba(37,99,235,.18);color:var(--blue-lt);font-weight:600}
+.tms-nav-item .ni{font-size:.95rem;width:16px;text-align:center;flex-shrink:0}
+.nbadge{margin-left:auto;padding:.08rem .35rem;border-radius:4px;font-size:.6rem;font-weight:700}
+.nbadge.blue{background:var(--blue);color:#fff}
+.nbadge.green{background:rgba(16,185,129,.2);color:var(--green-lt)}
+.nbadge.amber{background:rgba(245,158,11,.2);color:var(--amber)}
+.nbadge.red{background:rgba(239,68,68,.2);color:#fca5a5}
 
-/* KPI */
-.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.kcard{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:16px 18px;transition:border-color .2s}
-.kcard:hover{border-color:var(--b2)}
-.klabel{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono);margin-bottom:8px}
-.kval{font-family:var(--display);font-size:26px;font-weight:800;color:#fff;line-height:1;margin-bottom:5px}
-.kdelta{font-size:11px;font-weight:600}
-.kdelta.up{color:var(--green)}.kdelta.warn{color:var(--amber)}.kdelta.dn{color:var(--red)}
-.kbar{height:3px;background:var(--border);border-radius:3px;margin-top:10px;overflow:hidden}
-.kfill{height:100%;border-radius:3px}
+/* Main Panel */
+.tms-content{background:var(--bg2);overflow:hidden}
+.tms-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border)}
+.tms-title{font-size:.95rem;font-weight:700;margin-bottom:.15rem}
+.tms-sub{font-size:.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.tms-header-right{display:flex;align-items:center;gap:.6rem}
+.ai-chip{display:flex;align-items:center;gap:.35rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--green-lt);padding:.25rem .7rem;border-radius:5px;font-size:.68rem;font-weight:700}
+.search-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.28rem .7rem;font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;width:160px}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
 
-/* TABLE */
-.tbl{width:100%;border-collapse:collapse}
-.tbl th{padding:9px 12px;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono);text-align:left;border-bottom:1px solid var(--border);font-weight:500}
-.tbl td{padding:13px 12px;font-size:13px;border-bottom:1px solid rgba(26,34,54,.5);vertical-align:middle}
-.tbl tr:hover td{background:rgba(255,255,255,.015)}
-.tbl tr:last-child td{border-bottom:none}
+.tms-body{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:.75rem;padding:1rem 1.25rem}
 
-/* BADGE */
-.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--mono)}
+/* KPI Cards */
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:.875rem 1rem}
+.kpi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.5rem}
+.kpi-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.kpi-icon.b{background:rgba(37,99,235,.18)}
+.kpi-icon.g{background:rgba(16,185,129,.18)}
+.kpi-icon.c{background:rgba(34,211,238,.12)}
+.kpi-icon.a{background:rgba(245,158,11,.15)}
+.kpi-icon.p{background:rgba(139,92,246,.18)}
+.kpi-change{font-size:.62rem;font-weight:700;padding:.15rem .4rem;border-radius:4px}
+.kpi-change.up{background:rgba(16,185,129,.12);color:var(--green-lt)}
+.kpi-change.dn{background:rgba(239,68,68,.12);color:#fca5a5}
+.kpi-val{font-size:1.35rem;font-weight:900;letter-spacing:-.02em;line-height:1}
+.kpi-val.b{color:var(--blue-lt)}.kpi-val.g{color:var(--green-lt)}.kpi-val.c{color:var(--cyan)}.kpi-val.a{color:var(--amber)}.kpi-val.p{color:#a78bfa}
+.kpi-label{font-size:.66rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:.25rem}
 
-/* SCORE */
-.score{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid;flex-shrink:0}
+/* Map Panel */
+.map-panel{grid-column:1/3;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:.65rem .9rem;border-bottom:1px solid var(--border)}
+.panel-title{font-size:.75rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.panel-badge{font-size:.6rem;font-weight:700;padding:.12rem .4rem;border-radius:4px;background:rgba(34,211,238,.1);color:var(--cyan)}
+.panel-actions{display:flex;gap:.4rem}
+.p-btn{background:var(--bg4);border:1px solid var(--border);color:var(--muted);font-size:.62rem;padding:.18rem .5rem;border-radius:4px;cursor:pointer}
+.map-wrap{position:relative;height:185px;background:var(--bg4);overflow:hidden}
+#usa-map{width:100%;height:100%}
 
-/* PROGRESS */
-.pbar-wrap{display:flex;align-items:center;gap:8px}
-.pbar{flex:1;height:5px;background:var(--bg3);border-radius:5px;overflow:hidden}
-.pfill{height:100%;border-radius:5px}
+/* Carrier Panel */
+.carrier-panel{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.carrier-list{padding:.5rem .9rem}
+.carrier-item{display:flex;align-items:center;gap:.6rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.carrier-item:last-child{border-bottom:none}
+.carrier-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.carrier-dot.moving{background:var(--green-lt);box-shadow:0 0 5px var(--green-lt)}
+.carrier-dot.idle{background:var(--amber)}
+.carrier-dot.offline{background:var(--muted)}
+.carrier-info{flex:1;min-width:0}
+.carrier-name{font-size:.72rem;font-weight:600;color:var(--off)}
+.carrier-route{font-size:.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.carrier-rate{font-size:.7rem;font-weight:700;color:var(--green-lt);flex-shrink:0}
 
-/* 2-COL / 3-COL */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
-.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px}
+/* Revenue Chart */
+.chart-panel{grid-column:1/3;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.chart-wrap{padding:.75rem .9rem .9rem;position:relative;height:130px}
+canvas#rev-chart{width:100%!important;height:100%!important}
 
-/* AI CHAT FULL */
-.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 170px);background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.chat-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(255,77,0,.07),transparent)}
-.chat-orb{width:40px;height:40px;background:linear-gradient(135deg,var(--orange),var(--cyan));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;animation:orb 3s ease-in-out infinite;flex-shrink:0}
-@keyframes orb{0%,100%{box-shadow:0 0 0 0 rgba(255,77,0,.3)}50%{box-shadow:0 0 0 10px rgba(255,77,0,.0)}}
-.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
-.msg{display:flex;gap:10px;align-items:flex-start}
-.msg.user{flex-direction:row-reverse}
-.msg-bubble{max-width:70%;padding:12px 16px;border-radius:14px;font-size:13px;line-height:1.6}
-.msg.ai .msg-bubble{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px 14px 14px 14px}
-.msg.user .msg-bubble{background:linear-gradient(135deg,var(--orange),var(--o2));color:#fff;border-radius:14px 4px 14px 14px}
-.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.msg.ai .msg-avatar{background:linear-gradient(135deg,var(--orange),var(--cyan))}
-.msg.user .msg-avatar{background:var(--bg3);border:1px solid var(--border)}
-.chat-suggestions{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
-.sug{padding:6px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--t2);cursor:pointer;transition:all .15s;font-family:var(--font)}
-.sug:hover{background:rgba(255,77,0,.1);border-color:rgba(255,77,0,.3);color:var(--orange)}
-.chat-input-row{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:10px}
-.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 16px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s}
-.chat-input:focus{border-color:rgba(255,77,0,.4)}
-.chat-input::placeholder{color:var(--t3)}
-.chat-send{width:38px;height:38px;background:linear-gradient(135deg,var(--orange),var(--o2));border:none;border-radius:9px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* Load Table */
+.table-panel{grid-column:1/-1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+table.loads{width:100%;border-collapse:collapse}
+table.loads th{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:.45rem .75rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+table.loads td{font-size:.72rem;padding:.5rem .75rem;border-bottom:1px solid rgba(255,255,255,.025);color:var(--off);font-weight:500;vertical-align:middle}
+table.loads tr:last-child td{border-bottom:none}
+table.loads tr:hover td{background:rgba(255,255,255,.02)}
+.lid{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--cyan)}
+.s-pill{display:inline-flex;align-items:center;gap:.28rem;font-size:.62rem;font-weight:700;padding:.14rem .45rem;border-radius:4px}
+.s-pill.go{background:rgba(16,185,129,.14);color:var(--green-lt)}
+.s-pill.move{background:rgba(37,99,235,.14);color:var(--blue-lt)}
+.s-pill.wait{background:rgba(245,158,11,.14);color:var(--amber)}
+.s-pill.done{background:rgba(100,116,139,.12);color:var(--muted)}
+.s-pill.cold{background:rgba(34,211,238,.1);color:var(--cyan)}
+.pill-dot{width:4px;height:4px;border-radius:50%;background:currentColor}
+.rate-cell{font-weight:700;color:var(--white)}
+.type-tag{font-size:.6rem;font-weight:600;padding:.1rem .4rem;border-radius:3px;background:rgba(139,92,246,.12);color:#c4b5fd}
+.pct-bar{height:4px;border-radius:2px;background:var(--bg4);overflow:hidden;margin-top:.3rem}
+.pct-fill{height:100%;border-radius:2px;transition:width .8s ease}
 
-/* FACTORING */
-.factor-card{background:linear-gradient(135deg,rgba(0,229,160,.07),rgba(0,212,255,.04));border:1px solid rgba(0,229,160,.2);border-radius:14px;padding:18px}
-.factor-logo{font-size:24px;margin-bottom:10px}
-.factor-name{font-family:var(--display);font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
-.factor-rate{font-size:22px;font-weight:800;color:var(--green);margin-bottom:6px;font-family:var(--display)}
-.factor-desc{font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:12px}
-.factor-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+/* ═══ SECTIONS ═══ */
+section{padding:6rem 5%;position:relative;z-index:1}
+.s-tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--cyan);margin-bottom:.8rem}
+h2{font-size:clamp(1.8rem,3.8vw,2.8rem);font-weight:800;letter-spacing:-.025em;line-height:1.12;margin-bottom:1rem}
+.s-lead{color:var(--muted);font-size:.97rem;max-width:560px;line-height:1.78;margin-bottom:3.5rem}
+.divbar{width:44px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--cyan));margin-bottom:2.75rem}
 
-/* EXPENSE */
-.exp-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(26,34,54,.5)}
-.exp-row:last-child{border-bottom:none}
-.exp-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.exp-info{flex:1}
-.exp-name{font-size:13px;font-weight:600;color:var(--text)}
-.exp-sub{font-size:11px;color:var(--t2)}
-.exp-amt{font-size:15px;font-weight:700}
+/* Problem */
+#problem{background:var(--bg)}
+.prob-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.1rem}
+.prob-card{background:rgba(239,68,68,.045);border:1px solid rgba(239,68,68,.1);border-radius:var(--r2);padding:1.75rem;transition:all .25s}
+.prob-card:hover{border-color:rgba(239,68,68,.28);transform:translateY(-3px)}
+.prob-n{font-size:2.6rem;font-weight:900;letter-spacing:-.04em;color:#f87171;line-height:1;margin-bottom:.6rem}
+.prob-card h3{font-size:.94rem;font-weight:700;margin-bottom:.4rem}
+.prob-card p{color:var(--muted);font-size:.83rem;line-height:1.65}
 
-/* DOC VAULT */
-.doc-item{display:flex;align-items:center;gap:12px;padding:13px;background:var(--bg3);border:1px solid var(--border);border-radius:11px;margin-bottom:8px;transition:border-color .2s}
-.doc-item:hover{border-color:var(--b2)}
-.doc-icon{width:38px;height:38px;background:rgba(255,77,0,.1);border:1px solid rgba(255,77,0,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.doc-info{flex:1}
-.doc-name{font-size:13px;font-weight:600;color:var(--text)}
-.doc-meta{font-size:11px;color:var(--t2);margin-top:2px}
-.doc-status{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--mono)}
+/* Pillars */
+#pillars{background:var(--bg2)}
+.pill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.1rem}
+.pill-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:1.875rem;position:relative;overflow:hidden;transition:all .3s}
+.pill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px}
+.pill-card.pb::before{background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.pill-card.pg::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.pill-card.pa::before{background:linear-gradient(90deg,var(--amber),#f97316)}
+.pill-card.pc::before{background:linear-gradient(90deg,var(--cyan),var(--purple))}
+.pill-card:hover{transform:translateY(-4px);box-shadow:0 22px 44px rgba(0,0,0,.35)}
+.pill-ico{font-size:2rem;margin-bottom:1rem}
+.pill-tag{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.18rem .5rem;border-radius:4px;margin-bottom:.875rem;display:inline-block}
+.pill-tag.b{background:rgba(37,99,235,.14);color:var(--blue-lt)}
+.pill-tag.g{background:rgba(16,185,129,.14);color:var(--green-lt)}
+.pill-tag.a{background:rgba(245,158,11,.14);color:var(--amber)}
+.pill-tag.c{background:rgba(34,211,238,.1);color:var(--cyan)}
+.pill-card h3{font-size:1.02rem;font-weight:700;margin-bottom:.45rem}
+.pill-card p{color:var(--muted);font-size:.85rem;line-height:1.7;margin-bottom:.9rem}
+.pill-card ul{list-style:none}
+.pill-card ul li{font-size:.8rem;color:var(--muted);padding:.18rem 0 .18rem 1.15rem;position:relative}
+.pill-card ul li::before{content:'→';position:absolute;left:0;color:var(--cyan);font-size:.72rem;font-weight:700}
 
-/* RATE NEGOTIATOR */
-.rate-card{background:linear-gradient(135deg,rgba(255,77,0,.08),rgba(255,176,32,.04));border:1px solid rgba(255,77,0,.2);border-radius:14px;padding:20px}
-.rate-lane{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.rate-origin{font-family:var(--display);font-size:16px;font-weight:700;color:#fff}
-.rate-arrow{color:var(--orange);font-size:18px}
-.rate-dest{font-family:var(--display);font-size:16px;font-weight:700;color:#fff}
-.rate-meter{margin-bottom:14px}
-.rate-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:6px}
-.rate-track{height:10px;background:var(--bg3);border-radius:10px;position:relative;overflow:visible}
-.rate-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green))}
-.rate-pointer{position:absolute;top:-3px;width:16px;height:16px;background:#fff;border:2px solid var(--orange);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,77,0,.5)}
-.rate-suggest{background:var(--bg3);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--t2);line-height:1.6;border-left:3px solid var(--orange)}
+/* Market */
+#market{background:var(--bg)}
+.mkt-hero{background:linear-gradient(135deg,rgba(37,99,235,.09),rgba(6,182,212,.06));border:1px solid rgba(37,99,235,.18);border-radius:22px;padding:3.5rem;text-align:center;margin-bottom:2rem;position:relative;overflow:hidden}
+.mkt-hero::before{content:'';position:absolute;top:-60%;left:50%;transform:translateX(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.12),transparent 70%);pointer-events:none}
+.big-n{font-size:clamp(4rem,11vw,9rem);font-weight:900;letter-spacing:-.05em;background:linear-gradient(135deg,#60a5fa,#22d3ee,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.mkt-hero p{color:var(--muted);font-size:.97rem;margin-top:.75rem}
+.mkt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:1rem}
+.mkt-stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.35rem}
+.ms-num{font-size:1.7rem;font-weight:900;letter-spacing:-.03em;margin-bottom:.2rem}
+.ms-num.b{color:var(--blue-lt)}.ms-num.g{color:var(--green-lt)}.ms-num.c{color:var(--cyan)}.ms-num.a{color:var(--amber)}
+.ms-lbl{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.ms-desc{font-size:.78rem;color:var(--muted);margin-top:.35rem;line-height:1.5}
 
-/* ELD */
-.eld-device{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px}
-.eld-icon{width:44px;height:44px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
-.eld-status{font-size:11px;font-family:var(--mono)}
+/* Model */
+#model{background:var(--bg2)}
+.econ-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:22px;padding:2.5rem;margin-bottom:2rem}
+.econ-label{text-align:center;font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.75rem}
+.econ-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.875rem}
+.econ-box{text-align:center;padding:1.15rem 1.5rem;background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);min-width:130px}
+.econ-v{font-size:1.45rem;font-weight:900;letter-spacing:-.03em}
+.econ-v.b{color:var(--blue-lt)}.econ-v.c{color:var(--cyan)}.econ-v.g{color:var(--green-lt)}
+.econ-l{font-size:.65rem;color:var(--muted);font-weight:600;margin-top:.22rem;text-transform:uppercase;letter-spacing:.06em}
+.econ-op{font-size:1.3rem;color:var(--muted)}
+.proj-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
+.proj-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:1.875rem;text-align:center;position:relative;overflow:hidden}
+.proj-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.proj-card.y1::after{background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.proj-card.y2::after{background:linear-gradient(90deg,var(--cyan),var(--green-lt))}
+.proj-card.y3::after{background:linear-gradient(90deg,var(--green-lt),var(--amber))}
+.proj-yr{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.75rem}
+.proj-rev{font-size:2.4rem;font-weight:900;letter-spacing:-.04em}
+.proj-card.y1 .proj-rev{color:var(--blue-lt)}
+.proj-card.y2 .proj-rev{color:var(--cyan)}
+.proj-card.y3 .proj-rev{color:var(--green-lt)}
+.proj-note{color:var(--muted);font-size:.8rem;margin-top:.45rem;line-height:1.55}
+.proj-ms{display:inline-block;font-size:.66rem;font-weight:700;margin-top:.7rem;background:rgba(255,255,255,.05);border-radius:4px;padding:.18rem .5rem;color:var(--muted)}
 
-/* MAP */
-.map-box{background:var(--bg3);border-radius:12px;height:160px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:28px 28px}
-.map-route-line{position:absolute;top:50%;left:12%;right:12%;height:2px;background:linear-gradient(90deg,var(--orange),var(--cyan));transform:translateY(-50%)}
-.map-pin{position:absolute;top:50%;font-size:18px}
-.map-label-box{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);padding:4px 14px;border-radius:20px;font-size:10px;color:var(--t2);font-family:var(--mono);white-space:nowrap}
+/* Collab */
+#collab{background:var(--bg)}
+.collab-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.collab-main{background:linear-gradient(135deg,rgba(16,185,129,.07),rgba(37,99,235,.07));border:1px solid rgba(16,185,129,.18);border-radius:22px;padding:2.5rem}
+.collab-eye{display:inline-flex;align-items:center;gap:.45rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.22);color:var(--green-lt);border-radius:999px;padding:.25rem .85rem;font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:1.25rem}
+.collab-main h2{font-size:1.6rem;margin-bottom:.875rem}
+.collab-main p{color:var(--muted);font-size:.88rem;line-height:1.75;margin-bottom:.7rem}
+.collab-list{display:flex;flex-direction:column;gap:.875rem}
+.col-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.15rem;display:flex;gap:.875rem;align-items:flex-start;transition:all .25s}
+.col-item:hover{border-color:rgba(16,185,129,.22);transform:translateX(4px)}
+.col-ico{font-size:1.4rem;flex-shrink:0}
+.col-item h4{font-size:.87rem;font-weight:700;margin-bottom:.2rem}
+.col-item p{color:var(--muted);font-size:.8rem;line-height:1.6}
 
-/* ALERTS */
-.alert-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(26,34,54,.5)}
-.alert-item:last-child{border-bottom:none}
-.alert-dot-wrap{padding-top:3px}
-.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.alert-text{font-size:13px;color:var(--t2);line-height:1.5}
-.alert-text strong{color:var(--text);font-weight:600}
-.alert-time{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:2px}
+/* Why Now */
+#whynow{background:var(--bg2)}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1.1rem}
+.why-card{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--r2);padding:1.75rem;transition:all .25s}
+.why-card:hover{border-left-color:var(--cyan);transform:translateY(-3px)}
+.why-card h3{font-size:.92rem;font-weight:700;margin-bottom:.45rem}
+.why-card p{color:var(--muted);font-size:.83rem;line-height:1.65}
 
-/* FEATURE OVERVIEW */
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.feat-box{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:18px;transition:all .2s}
-.feat-box:hover{border-color:rgba(255,77,0,.25);transform:translateY(-2px)}
-.feat-em{font-size:28px;margin-bottom:10px}
-.feat-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:5px}
-.feat-desc{font-size:12px;color:var(--t2);line-height:1.5}
-.feat-tag-new{display:inline-block;margin-top:8px;background:rgba(0,229,160,.12);border:1px solid rgba(0,229,160,.25);color:var(--green);font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;font-family:var(--mono);letter-spacing:.5px}
-.feat-tag-core{display:inline-block;margin-top:8px;background:rgba(255,77,0,.1);border:1px solid rgba(255,77,0,.25);color:var(--orange);font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;font-family:var(--mono);letter-spacing:.5px}
+/* Traction */
+#traction{background:var(--bg)}
+.trac-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.1rem}
+.trac-card{background:linear-gradient(135deg,rgba(37,99,235,.07),rgba(6,182,212,.04));border:1px solid rgba(37,99,235,.13);border-radius:var(--r2);padding:1.75rem;text-align:center;transition:all .25s}
+.trac-card:hover{border-color:rgba(37,99,235,.3);transform:translateY(-3px)}
+.trac-ico{font-size:2rem;margin-bottom:.7rem}
+.trac-card h3{font-size:.92rem;font-weight:700;margin-bottom:.35rem}
+.trac-card p{color:var(--muted);font-size:.81rem;line-height:1.6}
 
-/* CHART BARS */
-.bars{display:flex;align-items:flex-end;gap:5px;height:72px}
-.bar-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
-.bar-b{width:100%;border-radius:3px 3px 0 0}
-.bar-l{font-size:8px;color:var(--t3);font-family:var(--mono)}
+/* CTA */
+#cta{padding:8rem 5%}
+.cta-inner{max-width:840px;margin:0 auto;text-align:center}
+.cta-inner h2{font-size:clamp(2rem,5vw,3.8rem);margin-bottom:1.1rem}
+.cta-inner>p{color:var(--muted);font-size:.97rem;line-height:1.78;margin-bottom:3rem;max-width:600px;margin-left:auto;margin-right:auto}
+.cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:.9rem;margin-bottom:3rem}
+.cta-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1.6rem 1.1rem;text-align:center;text-decoration:none;color:inherit;transition:all .25s;display:block}
+.cta-card:hover{border-color:rgba(37,99,235,.38);transform:translateY(-4px);box-shadow:0 22px 44px rgba(0,0,0,.3)}
+.cta-ico{font-size:2.2rem;margin-bottom:.75rem}
+.cta-card h3{font-size:.94rem;font-weight:700;margin-bottom:.3rem}
+.cta-card p{color:var(--muted);font-size:.77rem;line-height:1.55}
+.cta-contact{color:var(--muted);font-size:.86rem;margin-top:1.25rem}
+.cta-contact a{color:var(--cyan);text-decoration:none;font-weight:600}
+.cta-contact a:hover{text-decoration:underline}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+/* Footer */
+footer{border-top:1px solid var(--border);padding:1.875rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;z-index:1;position:relative}
+.f-logo{font-weight:800;font-size:.92rem;color:var(--off)}
+.f-logo span{color:var(--cyan)}
+footer p{color:var(--muted);font-size:.76rem}
+.f-links{display:flex;gap:1.5rem}
+.f-links a{color:var(--muted);font-size:.76rem;text-decoration:none;transition:color .2s}
+.f-links a:hover{color:var(--white)}
 
-/* MOBILE */
-@media(max-width:860px){
-  .sidebar{width:52px}.nitem span:not(.ni-icon){display:none}.ni-badge,.ni-new,.sb-bottom{display:none}
-  .main{margin-left:52px;padding:14px}
-  .g2,.g3,.g21,.g12{grid-template-columns:1fr}
-  .topbar-center .ttab{padding:5px 8px;font-size:11px}
-  .kgrid{grid-template-columns:1fr 1fr}
+/* Reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media(max-width:960px){
+  .nav-links{display:none}
+  .tms-shell{grid-template-columns:1fr}
+  .tms-nav{display:none}
+  .tms-body{grid-template-columns:1fr 1fr}
+  .map-panel{grid-column:1/-1}
+  .chart-panel{grid-column:1/-1}
+  .collab-grid{grid-template-columns:1fr}
+  .proj-row{grid-template-columns:1fr}
+  .econ-row{flex-direction:column}
+  .econ-op{transform:rotate(90deg)}
+}
+@media(max-width:600px){
+  .n-ghost{display:none}
+  .proof-bar{gap:1.25rem}
+  .tms-body{grid-template-columns:1fr}
+  .map-panel,.chart-panel{grid-column:1/-1}
 }
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="logo">
-    <div class="logo-box">🚛</div>
-    <div class="logo-name">Freight<em>IQ</em></div>
+<div id="ambient"><div class="amb-orb amb-1"></div><div class="amb-orb amb-2"></div><div class="amb-orb amb-3"></div></div>
+<div class="grid-overlay"></div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="#hero" class="nav-brand">
+    <div class="brand-icon">🚛</div>
+    FreightIQ<span class="brand-sub"> USA</span>
+  </a>
+  <div class="nav-links">
+    <a href="#tms-demo">Platform</a>
+    <a href="#market">Market</a>
+    <a href="#model">Model</a>
+    <a href="#collab">Partnership</a>
+    <a href="#traction">Traction</a>
+    <a href="#cta">Contact</a>
   </div>
-  <div class="topbar-center">
-    <button class="ttab on" onclick="switchMode('carrier',this)">🚛 Carrier</button>
-    <button class="ttab" onclick="switchMode('broker',this)">🏢 Broker Pro</button>
-    <button class="ttab" onclick="switchMode('shipper',this)">📦 Shipper Pro</button>
+  <div class="nav-actions">
+    <a href="#collab" class="n-ghost">Partner</a>
+    <a href="#cta" class="n-cta">Get Access →</a>
   </div>
-  <div class="topbar-right">
-    <div class="live-tag"><div class="live-dot"></div>DAT LIVE</div>
-    <div class="notif-btn" onclick="showScr('carrier','alerts')">🔔<div class="notif-count">4</div></div>
-    <div class="avatar">MT</div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-badge"><div class="pulse-ring"></div>Building the Future of Premium Freight</div>
+  <h1>The AI-Powered TMS<br/><span class="grad-text">Built for What Matters Most</span></h1>
+  <p class="hero-sub">
+    <strong>FreightIQ USA</strong> is the unified transportation management system for
+    premium freight — pharma, healthcare, hot shot, and time-critical produce.
+    Combined with <strong>OTR/intermodal intelligence</strong>, we connect shippers and carriers
+    through one AI platform, paying carriers <strong>same-day</strong> and matching on
+    <strong>reliability, not just price</strong>.
+  </p>
+  <div class="hero-btns">
+    <a href="#tms-demo" class="btn-main">See Live Platform →</a>
+    <a href="#cta" class="btn-sec">Connect With Us</a>
+  </div>
+  <div class="proof-bar">
+    <div class="proof-item"><div class="proof-n">$405B</div><div class="proof-l">Total Market</div></div>
+    <div class="proof-item"><div class="proof-n">22%</div><div class="proof-l">CAGR to 2030</div></div>
+    <div class="proof-item"><div class="proof-n g">$700</div><div class="proof-l">Rev / Load</div></div>
+    <div class="proof-item"><div class="proof-n a">60%+</div><div class="proof-l">Gross Margin</div></div>
+    <div class="proof-item"><div class="proof-n">$3.5M</div><div class="proof-l">Yr 3 ARR Target</div></div>
+  </div>
+</section>
+
+<!-- ══ TICKER ══ -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="tick-i">🌡️ Cold Chain Monitoring <b>LIVE</b></div>
+    <div class="tick-i">⚡ Same-Day Carrier Payment <b>Enabled</b></div>
+    <div class="tick-i">📦 Pharma Cold Chain Premium <b>+30–50%</b></div>
+    <div class="tick-i">🚛 CA → East Coast Reefer <b>$9,400–$10,000</b></div>
+    <div class="tick-i">🔗 OTR + Intermodal Integration <b>Active</b></div>
+    <div class="tick-i">📊 Reefer Capacity Gap <b>20% Rejection Rate</b></div>
+    <div class="tick-i">🤖 AI Route Optimization <b>94% Match Rate</b></div>
+    <div class="tick-i">📈 Digital Freight Market CAGR <b>22% / Year</b></div>
+    <div class="tick-i">🌡️ Cold Chain Monitoring <b>LIVE</b></div>
+    <div class="tick-i">⚡ Same-Day Carrier Payment <b>Enabled</b></div>
+    <div class="tick-i">📦 Pharma Cold Chain Premium <b>+30–50%</b></div>
+    <div class="tick-i">🚛 CA → East Coast Reefer <b>$9,400–$10,000</b></div>
+    <div class="tick-i">🔗 OTR + Intermodal Integration <b>Active</b></div>
+    <div class="tick-i">📊 Reefer Capacity Gap <b>20% Rejection Rate</b></div>
+    <div class="tick-i">🤖 AI Route Optimization <b>94% Match Rate</b></div>
+    <div class="tick-i">📈 Digital Freight Market CAGR <b>22% / Year</b></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════ CARRIER ═══════════════════════════ -->
-<div id="mode-carrier" class="wrap">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-section">Main</div>
-    <button class="nitem on" onclick="showScr('carrier','dashboard',this)"><span class="ni-icon">◈</span><span>Dashboard</span></button>
-    <button class="nitem" onclick="showScr('carrier','loads',this)"><span class="ni-icon">🔍</span><span>Load Search</span><span class="ni-badge">14</span></button>
-    <button class="nitem" onclick="showScr('carrier','tracking',this)"><span class="ni-icon">📍</span><span>Live Tracking</span></button>
-    <button class="nitem" onclick="showScr('carrier','chat',this)"><span class="ni-icon">🤖</span><span>AI Chat</span><span class="ni-new">NEW</span></button>
-    <div class="sb-section">Finance</div>
-    <button class="nitem" onclick="showScr('carrier','invoices',this)"><span class="ni-icon">📄</span><span>Invoices</span><span class="ni-badge">3</span></button>
-    <button class="nitem" onclick="showScr('carrier','payments',this)"><span class="ni-icon">💰</span><span>Payments</span></button>
-    <button class="nitem" onclick="showScr('carrier','factoring',this)"><span class="ni-icon">⚡</span><span>Factoring</span><span class="ni-new">NEW</span></button>
-    <button class="nitem" onclick="showScr('carrier','expenses',this)"><span class="ni-icon">🧾</span><span>Expenses</span><span class="ni-new">NEW</span></button>
-    <div class="sb-section">Tools</div>
-    <button class="nitem" onclick="showScr('carrier','negotiate',this)"><span class="ni-icon">🤝</span><span>Rate Negotiator</span><span class="ni-new">NEW</span></button>
-    <button class="nitem" onclick="showScr('carrier','eld',this)"><span class="ni-icon">📡</span><span>ELD / HOS</span><span class="ni-new">NEW</span></button>
-    <button class="nitem" onclick="showScr('carrier','docs',this)"><span class="ni-icon">🗄️</span><span>Doc Vault</span><span class="ni-new">NEW</span></button>
-    <button class="nitem" onclick="showScr('carrier','ifta',this)"><span class="ni-icon">📊</span><span>IFTA Reports</span></button>
-    <button class="nitem" onclick="showScr('carrier','alerts',this)"><span class="ni-icon">🔔</span><span>Alerts</span><span class="ni-badge">4</span></button>
-    <button class="nitem" onclick="showScr('carrier','drivers',this)"><span class="ni-icon">👤</span><span>Drivers</span></button>
-    <button class="nitem" onclick="showScr('carrier','features',this)"><span class="ni-icon">✨</span><span>All Features</span></button>
-    <div class="sb-bottom">
-      <div class="plan-card">
-        <div class="plan-title">Fleet Plan</div>
-        <div class="plan-sub">3/5 trucks · 14 features</div>
-        <button class="plan-btn">Upgrade →</button>
-      </div>
-    </div>
-  </aside>
+<!-- ══ TMS DASHBOARD DEMO ══ -->
+<section id="tms-demo">
+  <div class="demo-eyebrow">Live Platform Preview</div>
+  <div class="demo-h">FreightIQ TMS — AI Command Center</div>
+  <p class="demo-sub">Real-time load tracking, AI-powered carrier matching, cold chain monitoring, and instant payment — all in one dashboard.</p>
 
-  <main class="main">
-
-    <!-- DASHBOARD -->
-    <div id="carrier-dashboard" class="scr on">
-      <div class="phdr">
-        <div><div class="plabel">// Overview</div><div class="ptitle">Good morning, Mike 👋</div><div class="psub">Monday Apr 21 · 3 trucks active · Rates up 8% today</div></div>
-        <div class="pactions"><button class="btn btn-g">📥 Import Rate Con</button><button class="btn btn-p">+ Add Load</button></div>
-      </div>
-      <div class="kgrid">
-        <div class="kcard"><div class="klabel">Monthly Revenue</div><div class="kval">$24,800</div><div class="kdelta up">↑ 18% vs last month</div><div class="kbar"><div class="kfill" style="width:74%;background:var(--green)"></div></div></div>
-        <div class="kcard"><div class="klabel">Active Loads</div><div class="kval">3</div><div class="kdelta up">All trucks running</div><div class="kbar"><div class="kfill" style="width:100%;background:var(--cyan)"></div></div></div>
-        <div class="kcard"><div class="klabel">Pending Pay</div><div class="kval">$14,200</div><div class="kdelta warn">⚠ 1 overdue</div><div class="kbar"><div class="kfill" style="width:60%;background:var(--amber)"></div></div></div>
-        <div class="kcard"><div class="klabel">Avg $/Mile</div><div class="kval">$5.24</div><div class="kdelta up">↑ mkt avg $4.10</div><div class="kbar"><div class="kfill" style="width:88%;background:var(--orange)"></div></div></div>
-        <div class="kcard"><div class="klabel">Expenses MTD</div><div class="kval">$6,420</div><div class="kdelta warn">Fuel +$0.12/gal</div><div class="kbar"><div class="kfill" style="width:42%;background:var(--red)"></div></div></div>
-        <div class="kcard"><div class="klabel">Net Profit MTD</div><div class="kval" style="color:var(--green)">$18,380</div><div class="kdelta up">↑ 22% this month</div><div class="kbar"><div class="kfill" style="width:70%;background:var(--green)"></div></div></div>
-      </div>
-      <div class="g21" style="margin-bottom:14px">
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff">Active Loads</div>
-            <button class="btn btn-g" style="padding:5px 12px;font-size:11px" onclick="showScr('carrier','tracking',null)">View map →</button>
-          </div>
-          <table class="tbl">
-            <thead><tr><th>Driver & Route</th><th>Progress</th><th>Rate</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td><div style="font-weight:600;color:#fff">Mike Torres</div><div style="font-size:11px;color:var(--t3)">LA → Dallas, TX</div></td><td><div class="pbar-wrap"><div class="pbar"><div class="pfill" style="width:58%;background:linear-gradient(90deg,var(--orange),var(--amber))"></div></div><span style="font-size:10px;color:var(--t2);font-family:var(--mono)">58%</span></div></td><td><strong style="color:#fff">$4,200</strong></td><td><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">Transit</span></td></tr>
-              <tr><td><div style="font-weight:600;color:#fff">James Rivera</div><div style="font-size:11px;color:var(--t3)">Phoenix → Chicago</div></td><td><div class="pbar-wrap"><div class="pbar"><div class="pfill" style="width:100%;background:var(--green)"></div></div><span style="font-size:10px;color:var(--green);font-family:var(--mono)">✓</span></div></td><td><strong style="color:#fff">$5,800</strong></td><td><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Delivered</span></td></tr>
-              <tr><td><div style="font-weight:600;color:#fff">Sara Patel</div><div style="font-size:11px;color:var(--t3)">Denver → Atlanta</div></td><td><div class="pbar-wrap"><div class="pbar"><div class="pfill" style="width:22%;background:var(--amber)"></div></div><span style="font-size:10px;color:var(--t2);font-family:var(--mono)">22%</span></div></td><td><strong style="color:#fff">$3,900</strong></td><td><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Picked Up</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:12px">Revenue — 8 Weeks</div>
-          <div class="bars">
-            <div class="bar-w"><div class="bar-b" style="height:50%;background:rgba(255,77,0,.3)"></div><div class="bar-l">W1</div></div>
-            <div class="bar-w"><div class="bar-b" style="height:60%;background:rgba(255,77,0,.35)"></div><div class="bar-l">W2</div></div>
-            <div class="bar-w"><div class="bar-b" style="height:45%;background:rgba(255,77,0,.3)"></div><div class="bar-l">W3</div></div>
-            <div class="bar-w"><div class="bar-b" style="height:70%;background:rgba(255,77,0,.4)"></div><div class="bar-l">W4</div></div>
-            <div class="bar-w"><div class="bar-b" style="height:65%;background:rgba(255,77,0,.4)"></div><div class="bar-l">W5</div></div>
-            <div class="bar-w"><div class="bar-b" style="height:80%;background:rgba(255,77,0,.5)"></div><div class="bar-l">W6</div></div>
-            <div class="bar-w"><div class="bar-b" style="height:74%;background:rgba(255,77,0,.5)"></div><div class="bar-l">W7</div></div>
-            <div class="bar-w"><div class="bar-b" style="height:95%;background:linear-gradient(0,var(--orange),var(--amber))"></div><div class="bar-l">W8</div></div>
-          </div>
-          <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;justify-content:space-between;padding:8px 10px;background:rgba(255,59,92,.07);border-radius:8px;border:1px solid rgba(255,59,92,.15)"><span style="font-size:12px;color:var(--t2)">⚠ Echo Global overdue $3,200</span><button class="btn btn-p" style="padding:4px 10px;font-size:10px" onclick="showScr('carrier','payments',null)">Remind</button></div>
-            <div style="display:flex;justify-content:space-between;padding:8px 10px;background:rgba(0,229,160,.06);border-radius:8px;border:1px solid rgba(0,229,160,.15)"><span style="font-size:12px;color:var(--t2)">🔥 LA→Phoenix rate spike: $6.80/mi</span><button class="btn btn-g" style="padding:4px 10px;font-size:10px" onclick="showScr('carrier','loads',null)">View</button></div>
-          </div>
-        </div>
-      </div>
+  <div class="browser reveal">
+    <div class="browser-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="addr">app.<em>freightiqusa</em>.com / dashboard</div>
+      <div class="status-live"><div class="dot-live"></div>System Live</div>
     </div>
 
-    <!-- LOAD SEARCH -->
-    <div id="carrier-loads" class="scr">
-      <div class="phdr"><div><div class="plabel">// DAT Live</div><div class="ptitle">AI Load Search</div><div class="psub">Ranked by net profit per mile · Live DAT board</div></div><div class="pactions"><button class="btn btn-g" onclick="showScr('carrier','negotiate',null)">🤝 Negotiate Rate</button><button class="btn btn-p">🤖 AI Optimize</button></div></div>
-      <div style="background:linear-gradient(135deg,rgba(255,77,0,.09),rgba(255,176,32,.05));border:1px solid rgba(255,77,0,.22);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
-        <span style="font-size:20px">🏆</span><div style="flex:1"><div style="font-size:10px;color:var(--orange);font-weight:700;font-family:var(--mono);letter-spacing:1px">AI TOP PICK TODAY</div><div style="font-size:13px;font-weight:600;color:#fff">LA → Phoenix · $2,400 · 372 mi · <span style="color:var(--green)">$6.45/mi · $1,680 net profit</span></div></div>
-        <button class="btn btn-p" style="white-space:nowrap">Book Now</button>
-      </div>
-      <div class="card" style="padding:0;overflow:hidden">
-        <table class="tbl">
-          <thead><tr><th style="width:48px">Score</th><th>Route</th><th>Broker</th><th>Rate</th><th>$/Mi</th><th>Net Profit</th><th>Pickup</th><th></th></tr></thead>
-          <tbody>
-            <tr style="background:rgba(255,77,0,.025)"><td><div class="score" style="color:var(--green);border-color:var(--green);background:rgba(0,229,160,.1)">98</div></td><td><div style="font-weight:600;color:#fff">Los Angeles → Phoenix, AZ</div><div style="font-size:10px;color:var(--t3)">Echo Global · 372 mi</div></td><td style="color:var(--t2)">Echo Global</td><td><strong style="color:#fff;font-size:14px">$2,400</strong></td><td><strong style="color:var(--green)">$6.45</strong></td><td><strong style="color:var(--green)">$1,680</strong></td><td><span style="font-size:10px;color:var(--t2);font-family:var(--mono)">Apr 21</span></td><td><button class="btn btn-p" style="padding:5px 14px;font-size:11px">Book</button></td></tr>
-            <tr><td><div class="score" style="color:var(--green);border-color:var(--green);background:rgba(0,229,160,.1)">94</div></td><td><div style="font-weight:600;color:#fff">Ontario, CA → Las Vegas, NV</div><div style="font-size:10px;color:var(--t3)">Coyote · 268 mi</div></td><td style="color:var(--t2)">Coyote Logistics</td><td><strong style="color:#fff;font-size:14px">$1,800</strong></td><td><strong style="color:var(--green)">$6.72</strong></td><td><strong style="color:var(--green)">$1,260</strong></td><td><span style="font-size:10px;color:var(--t2);font-family:var(--mono)">Apr 21</span></td><td><button class="btn btn-p" style="padding:5px 14px;font-size:11px">Book</button></td></tr>
-            <tr><td><div class="score" style="color:var(--amber);border-color:var(--amber);background:rgba(255,176,32,.1)">76</div></td><td><div style="font-weight:600;color:#fff">Riverside, CA → Denver, CO</div><div style="font-size:10px;color:var(--t3)">CH Robinson · 1,020 mi</div></td><td style="color:var(--t2)">CH Robinson</td><td><strong style="color:#fff;font-size:14px">$3,800</strong></td><td><strong style="color:var(--amber)">$3.73</strong></td><td><strong style="color:var(--amber)">$2,280</strong></td><td><span style="font-size:10px;color:var(--t2);font-family:var(--mono)">Apr 22</span></td><td><button class="btn btn-g" style="padding:5px 14px;font-size:11px">Details</button></td></tr>
-            <tr><td><div class="score" style="color:var(--red);border-color:var(--red);background:rgba(255,59,92,.1)">42</div></td><td><div style="font-weight:600;color:#fff">Fontana, CA → Albuquerque, NM</div><div style="font-size:10px;color:var(--t3)">Worldwide · 790 mi</div></td><td style="color:var(--t2)">Worldwide Express</td><td><strong style="color:#fff;font-size:14px">$2,100</strong></td><td><strong style="color:var(--red)">$2.66</strong></td><td><strong style="color:var(--red)">$840</strong></td><td><span style="font-size:10px;color:var(--t2);font-family:var(--mono)">Apr 23</span></td><td><button class="btn btn-g" style="padding:5px 14px;font-size:11px;opacity:.4">Skip</button></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- AI CHAT — NEW FEATURE -->
-    <div id="carrier-chat" class="scr">
-      <div class="phdr"><div><div class="plabel">// AI Intelligence</div><div class="ptitle">FreightIQ AI Chat ✨</div><div class="psub">Ask anything — knows your full fleet history, loads, payments & market data</div></div></div>
-      <div class="chat-wrap">
-        <div class="chat-hdr">
-          <div class="chat-orb">🤖</div>
-          <div><div style="font-family:var(--display);font-weight:700;color:#fff;font-size:15px">FreightIQ AI</div><div style="font-size:11px;color:var(--t2)">Powered by Claude · Knows your fleet · Always online</div></div>
-          <div style="margin-left:auto"><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">● Online</span></div>
+    <div class="tms-shell">
+      <!-- Sidebar Nav -->
+      <div class="tms-nav">
+        <div class="tms-nav-logo">🚛 <span>FreightIQ</span></div>
+        <div class="tms-nav-section">
+          <div class="tms-nav-label">Operations</div>
+          <div class="tms-nav-item on"><span class="ni">📊</span>Dashboard<span class="nbadge green">Live</span></div>
+          <div class="tms-nav-item"><span class="ni">🗂️</span>Load Board<span class="nbadge blue">37</span></div>
+          <div class="tms-nav-item"><span class="ni">🚛</span>Active Loads<span class="nbadge blue">14</span></div>
+          <div class="tms-nav-item"><span class="ni">🌡️</span>Cold Chain<span class="nbadge amber">3</span></div>
+          <div class="tms-nav-item"><span class="ni">🗺️</span>Live Map</div>
         </div>
-        <div class="chat-messages" id="chat-msgs">
-          <div class="msg ai">
-            <div class="msg-avatar">🤖</div>
-            <div class="msg-bubble">Hey Mike! 👋 I've analyzed your fleet data for today. <strong style="color:var(--orange)">LA→Phoenix is your best load</strong> right now at $6.45/mi — $1,680 net profit after fuel. Echo Global also owes you $3,200 that's 15 days overdue. Want me to draft a payment reminder? Ask me anything!</div>
+        <div class="tms-nav-section">
+          <div class="tms-nav-label">Network</div>
+          <div class="tms-nav-item"><span class="ni">🏭</span>Shippers</div>
+          <div class="tms-nav-item"><span class="ni">🚚</span>Carriers<span class="nbadge green">47</span></div>
+          <div class="tms-nav-item"><span class="ni">📋</span>Brokers</div>
+          <div class="tms-nav-item"><span class="ni">🔗</span>Intermodal</div>
+        </div>
+        <div class="tms-nav-section">
+          <div class="tms-nav-label">Finance</div>
+          <div class="tms-nav-item"><span class="ni">💸</span>Payments</div>
+          <div class="tms-nav-item"><span class="ni">📈</span>Revenue</div>
+          <div class="tms-nav-item"><span class="ni">🤖</span>AI Insights</div>
+          <div class="tms-nav-item"><span class="ni">⚙️</span>Settings</div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="tms-content">
+        <div class="tms-header">
+          <div>
+            <div class="tms-title">Operations Dashboard</div>
+            <div class="tms-sub mono" id="tms-clock">—</div>
+          </div>
+          <div class="tms-header-right">
+            <div class="ai-chip"><div class="dot-live"></div>AI Matching Active</div>
+            <div class="search-box">🔍 Search loads...</div>
+            <div class="avatar">R</div>
           </div>
         </div>
-        <div class="chat-suggestions">
-          <div class="sug" onclick="sendChat('What loads should I book today?')">Best loads today?</div>
-          <div class="sug" onclick="sendChat('Who owes me money and how much?')">Who owes me?</div>
-          <div class="sug" onclick="sendChat('Generate my IFTA report for Q1')">IFTA Q1 report</div>
-          <div class="sug" onclick="sendChat('What is my profit this week?')">Weekly profit</div>
-          <div class="sug" onclick="sendChat('Find me a load from LA to Texas tomorrow')">LA → Texas tomorrow</div>
-          <div class="sug" onclick="sendChat('Draft invoice reminder for Echo Global')">Draft reminder email</div>
-        </div>
-        <div class="chat-input-row">
-          <input class="chat-input" id="chat-input" placeholder="Ask me anything about your fleet, loads, payments, IFTA..." onkeydown="if(event.key==='Enter')sendChatInput()"/>
-          <button class="chat-send" onclick="sendChatInput()">➤</button>
-        </div>
-      </div>
-    </div>
 
-    <!-- FACTORING — NEW FEATURE -->
-    <div id="carrier-factoring" class="scr">
-      <div class="phdr"><div><div class="plabel">// Cash Flow</div><div class="ptitle">Factoring Connect ⚡</div><div class="psub">Get paid in 24 hours instead of waiting 30 days — connect your factoring company</div></div></div>
-      <div style="background:linear-gradient(135deg,rgba(0,229,160,.07),rgba(0,212,255,.04));border:1px solid rgba(0,229,160,.2);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
-        <span style="font-size:28px">💡</span>
-        <div><div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">What is Factoring?</div><div style="font-size:12px;color:var(--t2);line-height:1.5">You deliver a load, broker takes 30–45 days to pay. A factoring company pays you <strong style="color:var(--green)">within 24 hours</strong> and collects from the broker. They charge a small fee (2–4%). FreightIQ connects directly to top factoring companies.</div></div>
-      </div>
-      <div class="g3">
-        <div class="factor-card">
-          <div class="factor-logo">🏦</div>
-          <div class="factor-name">OTR Capital</div>
-          <div class="factor-rate">2.5% fee</div>
-          <div class="factor-desc">Industry leader. Same-day funding available. No hidden fees. Works with all brokers.</div>
-          <div class="factor-tags"><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Same-day</span><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">No minimums</span></div>
-          <button class="btn btn-green" style="width:100%">Connect Now</button>
-        </div>
-        <div class="factor-card">
-          <div class="factor-logo">⚡</div>
-          <div class="factor-name">RTS Financial</div>
-          <div class="factor-rate">2.0% fee</div>
-          <div class="factor-desc">Lowest rates for high-volume carriers. 24hr funding. Fuel card included free.</div>
-          <div class="factor-tags"><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">24-hour pay</span><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Fuel card</span></div>
-          <button class="btn btn-green" style="width:100%">Connect Now</button>
-        </div>
-        <div class="factor-card">
-          <div class="factor-logo">🚀</div>
-          <div class="factor-name">Triumph Business</div>
-          <div class="factor-rate">3.0% fee</div>
-          <div class="factor-desc">Best for new carriers. Easy approval. Handles all broker collections for you.</div>
-          <div class="factor-tags"><span class="tag" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:var(--purple)">Easy approval</span><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">New carrier OK</span></div>
-          <button class="btn btn-green" style="width:100%">Connect Now</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- EXPENSES — NEW FEATURE -->
-    <div id="carrier-expenses" class="scr">
-      <div class="phdr"><div><div class="plabel">// Cost Tracker</div><div class="ptitle">Expense Tracker 🧾</div><div class="psub">Track every dollar spent · Auto-categorize with AI · QuickBooks sync</div></div><div class="pactions"><button class="btn btn-p">+ Add Expense</button></div></div>
-      <div class="kgrid" style="grid-template-columns:repeat(4,1fr)">
-        <div class="kcard"><div class="klabel">Total MTD</div><div class="kval">$6,420</div></div>
-        <div class="kcard"><div class="klabel">Fuel</div><div class="kval" style="color:var(--red)">$4,120</div><div class="kdelta dn">64% of expenses</div></div>
-        <div class="kcard"><div class="klabel">Maintenance</div><div class="kval">$840</div></div>
-        <div class="kcard"><div class="klabel">Other</div><div class="kval">$1,460</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">Recent Expenses</div>
-          <div class="exp-row"><div class="exp-icon" style="background:rgba(255,59,92,.1)">⛽</div><div class="exp-info"><div class="exp-name">Pilot Flying J — Barstow, CA</div><div class="exp-sub">Fuel · T-01 · Apr 21</div></div><div class="exp-amt" style="color:var(--red)">-$412</div></div>
-          <div class="exp-row"><div class="exp-icon" style="background:rgba(255,176,32,.1)">🔧</div><div class="exp-info"><div class="exp-name">Tire replacement — Tucson</div><div class="exp-sub">Maintenance · T-01 · Apr 20</div></div><div class="exp-amt" style="color:var(--amber)">-$380</div></div>
-          <div class="exp-row"><div class="exp-icon" style="background:rgba(0,212,255,.1)">🅿️</div><div class="exp-info"><div class="exp-name">Truck Stop — El Paso, TX</div><div class="exp-sub">Parking & scales · T-01 · Apr 20</div></div><div class="exp-amt" style="color:var(--t2)">-$48</div></div>
-          <div class="exp-row"><div class="exp-icon" style="background:rgba(255,59,92,.1)">⛽</div><div class="exp-info"><div class="exp-name">Love's Travel Stop — Phoenix</div><div class="exp-sub">Fuel · T-03 · Apr 19</div></div><div class="exp-amt" style="color:var(--red)">-$388</div></div>
-          <div class="exp-row"><div class="exp-icon" style="background:rgba(139,92,246,.1)">📋</div><div class="exp-info"><div class="exp-name">Insurance — Monthly</div><div class="exp-sub">Commercial · All trucks · Apr 1</div></div><div class="exp-amt" style="color:var(--purple)">-$620</div></div>
-        </div>
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">Expense Breakdown</div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">⛽ Fuel</span><span style="font-size:12px;color:#fff;font-weight:600">$4,120</span></div><div class="pbar"><div class="pfill" style="width:64%;background:var(--red)"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">🛡️ Insurance</span><span style="font-size:12px;color:#fff;font-weight:600">$620</span></div><div class="pbar"><div class="pfill" style="width:10%;background:var(--purple)"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">🔧 Maintenance</span><span style="font-size:12px;color:#fff;font-weight:600">$840</span></div><div class="pbar"><div class="pfill" style="width:13%;background:var(--amber)"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">🅿️ Parking/Tolls</span><span style="font-size:12px;color:#fff;font-weight:600">$280</span></div><div class="pbar"><div class="pfill" style="width:4%;background:var(--cyan)"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">📋 Other</span><span style="font-size:12px;color:#fff;font-weight:600">$560</span></div><div class="pbar"><div class="pfill" style="width:9%;background:var(--t2)"></div></div></div>
+        <div class="tms-body">
+          <!-- KPI Row -->
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-icon b">📦</div><div class="kpi-change up" id="kpi-ch1">↑ 3 today</div></div>
+            <div class="kpi-val b" id="kpi1">14</div>
+            <div class="kpi-label">Active Loads</div>
           </div>
-          <div style="margin-top:16px;padding:12px;background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.15);border-radius:9px">
-            <div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:4px">🤖 AI Tip</div>
-            <div style="font-size:12px;color:var(--t2);line-height:1.5">You can save ~$340/mo by switching to Pilot for T-01 fuel stops. Also: your maintenance cost is 13% of revenue — industry avg is 8%. Schedule preventive service soon.</div>
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-icon g">💰</div><div class="kpi-change up">↑ 12.4%</div></div>
+            <div class="kpi-val g" id="kpi2">$8,960</div>
+            <div class="kpi-label">Revenue Today</div>
           </div>
-        </div>
-      </div>
-    </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-icon c">🚚</div><div class="kpi-change up" id="kpi-ch3">↑ 5 new</div></div>
+            <div class="kpi-val c" id="kpi3">47</div>
+            <div class="kpi-label">Carriers Online</div>
+          </div>
 
-    <!-- RATE NEGOTIATOR — NEW FEATURE -->
-    <div id="carrier-negotiate" class="scr">
-      <div class="phdr"><div><div class="plabel">// AI Rate Intel</div><div class="ptitle">Rate Negotiator 🤝</div><div class="psub">Know the real market rate before you call the broker — never leave money on the table</div></div></div>
-      <div class="g2">
-        <div>
-          <div class="rate-card" style="margin-bottom:14px">
-            <div class="rate-lane"><div class="rate-origin">Los Angeles, CA</div><div class="rate-arrow">→</div><div class="rate-dest">Phoenix, AZ</div></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
-              <div style="background:var(--bg3);border-radius:9px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">LOW MARKET</div><div style="font-size:18px;font-weight:700;color:var(--red);font-family:var(--display)">$4.20</div><div style="font-size:9px;color:var(--t3)">per mile</div></div>
-              <div style="background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);border-radius:9px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--green);font-family:var(--mono);margin-bottom:4px">TARGET RATE</div><div style="font-size:18px;font-weight:700;color:var(--green);font-family:var(--display)">$6.50</div><div style="font-size:9px;color:var(--green)">per mile</div></div>
-              <div style="background:var(--bg3);border-radius:9px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">TOP MARKET</div><div style="font-size:18px;font-weight:700;color:var(--amber);font-family:var(--display)">$7.20</div><div style="font-size:9px;color:var(--t3)">per mile</div></div>
+          <!-- USA Map -->
+          <div class="map-panel">
+            <div class="panel-header">
+              <div class="panel-title">🗺️ Live Freight Routes — National Network<span class="panel-badge">Real-Time</span></div>
+              <div class="panel-actions"><div class="p-btn">OTR</div><div class="p-btn">Reefer</div><div class="p-btn">Pharma</div></div>
             </div>
-            <div class="rate-meter" style="margin-bottom:16px">
-              <div class="rate-labels"><span>$4.20/mi</span><span style="color:var(--green)">Your current: $6.45</span><span>$7.20/mi</span></div>
-              <div class="rate-track"><div class="rate-fill" style="width:100%"></div><div class="rate-pointer" style="left:67%"></div></div>
-            </div>
-            <div class="rate-suggest">
-              <strong style="color:var(--orange)">🤖 AI Script:</strong> "Hey [broker name], I have a truck available in LA for Phoenix tomorrow. I'm seeing $6.50 average on this lane this week — can you do $6.50? My cost to run this is $4.65/mi so I need to be at $6.00 minimum." — <span style="color:var(--green)">You are in a strong position. Don't go below $6.00.</span>
+            <div class="map-wrap">
+              <svg id="usa-map" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" style="background:#0d1120"></svg>
             </div>
           </div>
-        </div>
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">Top Lanes — Rate Intel</div>
-          <table class="tbl">
-            <thead><tr><th>Lane</th><th>Avg Rate</th><th>Trend</th></tr></thead>
-            <tbody>
-              <tr><td><div style="font-weight:600;color:#fff">LA → Phoenix</div></td><td><strong style="color:var(--green)">$6.45/mi</strong></td><td><span style="color:var(--green);font-size:12px">↑ +22%</span></td></tr>
-              <tr><td><div style="font-weight:600;color:#fff">Ontario → Las Vegas</div></td><td><strong style="color:var(--green)">$6.72/mi</strong></td><td><span style="color:var(--green);font-size:12px">↑ +14%</span></td></tr>
-              <tr><td><div style="font-weight:600;color:#fff">LA → Denver</div></td><td><strong style="color:var(--amber)">$3.80/mi</strong></td><td><span style="color:var(--amber);font-size:12px">→ Flat</span></td></tr>
-              <tr><td><div style="font-weight:600;color:#fff">LA → Dallas</div></td><td><strong style="color:var(--amber)">$3.40/mi</strong></td><td><span style="color:var(--red);font-size:12px">↓ -8%</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
 
-    <!-- ELD / HOS — NEW FEATURE -->
-    <div id="carrier-eld" class="scr">
-      <div class="phdr"><div><div class="plabel">// Compliance</div><div class="ptitle">ELD & Hours of Service 📡</div><div class="psub">Stay compliant — real-time HOS tracking, ELD connection, violation alerts</div></div></div>
-      <div class="g2" style="margin-bottom:14px">
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">Connected ELD Devices</div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div class="eld-device"><div class="eld-icon">📡</div><div style="flex:1"><div style="font-weight:600;color:#fff;font-size:13px">Samsara ELD — T-01</div><div class="eld-status" style="color:var(--green)">● Connected · Mike Torres · On duty</div></div><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Live</span></div>
-            <div class="eld-device"><div class="eld-icon">📡</div><div style="flex:1"><div style="font-weight:600;color:#fff;font-size:13px">KeepTruckin — T-02</div><div class="eld-status" style="color:var(--t2)">● Connected · James Rivera · Off duty</div></div><span class="tag" style="background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.2);color:var(--t2)">Idle</span></div>
-            <div class="eld-device"><div class="eld-icon">📡</div><div style="flex:1"><div style="font-weight:600;color:#fff;font-size:13px">Samsara ELD — T-03</div><div class="eld-status" style="color:var(--cyan)">● Connected · Sara Patel · Driving</div></div><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">Active</span></div>
+          <!-- Carrier Status -->
+          <div class="carrier-panel">
+            <div class="panel-header">
+              <div class="panel-title">🚚 Carrier Network</div>
+              <span class="panel-badge">47 Online</span>
+            </div>
+            <div class="carrier-list">
+              <div class="carrier-item"><div class="carrier-dot moving"></div><div class="carrier-info"><div class="carrier-name">TruckCo #MC-44821</div><div class="carrier-route">Fresno CA → Atlanta GA</div><div class="pct-bar"><div class="pct-fill" style="width:72%;background:linear-gradient(90deg,var(--green),var(--cyan))"></div></div></div><div class="carrier-rate">$9,800</div></div>
+              <div class="carrier-item"><div class="carrier-dot moving"></div><div class="carrier-info"><div class="carrier-name">PharmaFreight #TX-2291</div><div class="carrier-route">LA CA → Boston MA</div><div class="pct-bar"><div class="pct-fill" style="width:45%;background:linear-gradient(90deg,var(--blue-lt),var(--cyan))"></div></div></div><div class="carrier-rate">$11,200</div></div>
+              <div class="carrier-item"><div class="carrier-dot moving"></div><div class="carrier-info"><div class="carrier-name">Swift Reefer #IL-8834</div><div class="carrier-route">Dallas TX → Chicago IL</div><div class="pct-bar"><div class="pct-fill" style="width:60%;background:linear-gradient(90deg,var(--cyan),var(--purple))"></div></div></div><div class="carrier-rate">$6,400</div></div>
+              <div class="carrier-item"><div class="carrier-dot idle"></div><div class="carrier-info"><div class="carrier-name">ProLogix #CA-5512</div><div class="carrier-route">Oxnard CA — Awaiting</div><div class="pct-bar"><div class="pct-fill" style="width:5%;background:var(--amber)"></div></div></div><div class="carrier-rate">Pending</div></div>
+              <div class="carrier-item"><div class="carrier-dot offline"></div><div class="carrier-info"><div class="carrier-name">FastHaul #AZ-3301</div><div class="carrier-route">Phoenix AZ — Delivered</div><div class="pct-bar"><div class="pct-fill" style="width:100%;background:var(--muted)"></div></div></div><div class="carrier-rate">$7,650</div></div>
+            </div>
           </div>
-          <div style="margin-top:14px;padding:10px 14px;background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.15);border-radius:9px;font-size:12px;color:var(--t2)">✅ All 3 drivers compliant · No HOS violations this week</div>
-        </div>
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">Mike Torres — HOS Today</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-            <div style="background:var(--bg3);border-radius:9px;padding:12px"><div style="font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">DRIVE TIME LEFT</div><div style="font-size:22px;font-weight:700;color:var(--green);font-family:var(--display)">6h 42m</div><div style="font-size:10px;color:var(--t3)">of 11 hrs</div></div>
-            <div style="background:var(--bg3);border-radius:9px;padding:12px"><div style="font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">ON DUTY LEFT</div><div style="font-size:22px;font-weight:700;color:var(--amber);font-family:var(--display)">8h 18m</div><div style="font-size:10px;color:var(--t3)">of 14 hrs</div></div>
-            <div style="background:var(--bg3);border-radius:9px;padding:12px"><div style="font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">CYCLE LEFT</div><div style="font-size:22px;font-weight:700;color:#fff;font-family:var(--display)">42h</div><div style="font-size:10px;color:var(--t3)">of 70 hrs</div></div>
-            <div style="background:var(--bg3);border-radius:9px;padding:12px"><div style="font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:4px">NEXT RESET</div><div style="font-size:22px;font-weight:700;color:var(--cyan);font-family:var(--display)">34h</div><div style="font-size:10px;color:var(--t3)">restart available</div></div>
+
+          <!-- Revenue Chart -->
+          <div class="chart-panel">
+            <div class="panel-header">
+              <div class="panel-title">📈 Weekly Revenue Performance</div>
+              <div style="display:flex;gap:.5rem;align-items:center">
+                <span style="font-size:.65rem;color:var(--green-lt);font-weight:700">↑ 18.4% vs last week</span>
+                <div class="panel-actions"><div class="p-btn">7D</div><div class="p-btn">30D</div></div>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="rev-chart"></canvas></div>
           </div>
-          <div style="padding:10px 14px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:9px;font-size:12px;color:var(--t2)">🤖 AI: Mike can drive to Dallas with 1.5 hrs to spare. Recommend fuel stop in Odessa to save 34 min off route.</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- DOCUMENT VAULT — NEW FEATURE -->
-    <div id="carrier-docs" class="scr">
-      <div class="phdr"><div><div class="plabel">// Storage</div><div class="ptitle">Document Vault 🗄️</div><div class="psub">All your docs in one place — AI reads & extracts data automatically</div></div><div class="pactions"><button class="btn btn-p">📎 Upload Doc</button></div></div>
-      <div class="g2">
-        <div>
-          <div style="font-size:11px;color:var(--t2);margin-bottom:10px;font-family:var(--mono)">LOAD DOCUMENTS</div>
-          <div class="doc-item"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Rate Confirmation — Echo Global L-4810</div><div class="doc-meta">Uploaded Apr 21 · AI extracted all data ✓</div></div><span class="doc-status" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Processed</span></div>
-          <div class="doc-item"><div class="doc-icon">📦</div><div class="doc-info"><div class="doc-name">Bill of Lading — L-4810</div><div class="doc-meta">Uploaded Apr 21 · Verified by AI</div></div><span class="doc-status" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Verified</span></div>
-          <div class="doc-item"><div class="doc-icon">✅</div><div class="doc-info"><div class="doc-name">Proof of Delivery — L-4805</div><div class="doc-meta">Photo uploaded Apr 20 · Invoice triggered</div></div><span class="doc-status" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Done</span></div>
-          <div style="font-size:11px;color:var(--t2);margin:14px 0 10px;font-family:var(--mono)">COMPLIANCE DOCUMENTS</div>
-          <div class="doc-item"><div class="doc-icon">🛡️</div><div class="doc-info"><div class="doc-name">Commercial Truck Insurance</div><div class="doc-meta">Progressive · Expires Dec 31, 2026</div></div><span class="doc-status" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Valid</span></div>
-          <div class="doc-item"><div class="doc-icon">📄</div><div class="doc-info"><div class="doc-name">USDOT Authority</div><div class="doc-meta">MC #1234567 · Active</div></div><span class="doc-status" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Active</span></div>
-          <div class="doc-item"><div class="doc-icon">⚠️</div><div class="doc-info"><div class="doc-name">CDL — Sara Patel</div><div class="doc-meta">Expires Jun 15, 2026 · Renewal needed soon</div></div><span class="doc-status" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Expiring</span></div>
-        </div>
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">🤖 AI Document Reader</div>
-          <div style="padding:16px;background:linear-gradient(135deg,rgba(255,77,0,.07),transparent);border:1px solid rgba(255,77,0,.18);border-radius:12px;margin-bottom:14px">
-            <div style="font-size:12px;color:var(--orange);font-weight:700;margin-bottom:6px">How it works:</div>
-            <div style="font-size:12px;color:var(--t2);line-height:1.7">1. Upload any PDF — rate con, BOL, POD, insurance card<br/>2. AI reads and extracts all data automatically<br/>3. Load details auto-fill into your TMS<br/>4. Invoice is generated with one click<br/>5. Document stored safely forever</div>
+          <!-- Load Table -->
+          <div class="table-panel">
+            <div class="panel-header">
+              <div class="panel-title">🗂️ Active Load Board — Premium Freight Only</div>
+              <div class="panel-badge">14 Active</div>
+            </div>
+            <table class="loads">
+              <thead><tr>
+                <th>Load ID</th><th>Origin</th><th>Destination</th><th>Freight Type</th><th>Rate</th><th>Status</th><th>Carrier Match</th>
+              </tr></thead>
+              <tbody id="load-tbody">
+                <tr><td><span class="lid">FIQ-4821</span></td><td>Fresno, CA</td><td>Atlanta, GA</td><td><span class="type-tag">Reefer Produce</span></td><td class="rate-cell">$9,800</td><td><span class="s-pill move"><div class="pill-dot"></div>In Transit</span></td><td>TruckCo #44821</td></tr>
+                <tr><td><span class="lid">FIQ-4822</span></td><td>Los Angeles, CA</td><td>Boston, MA</td><td><span class="type-tag">Pharma Cold</span></td><td class="rate-cell">$11,200</td><td><span class="s-pill cold"><div class="pill-dot"></div>Cold Chain</span></td><td>PharmaFreight #2291</td></tr>
+                <tr><td><span class="lid">FIQ-4823</span></td><td>Dallas, TX</td><td>Chicago, IL</td><td><span class="type-tag">Healthcare Urgent</span></td><td class="rate-cell">$6,400</td><td><span class="s-pill go"><div class="pill-dot"></div>Dispatched</span></td><td>Swift Reefer #8834</td></tr>
+                <tr><td><span class="lid">FIQ-4824</span></td><td>Oxnard, CA</td><td>New York, NY</td><td><span class="type-tag">Reefer Produce</span></td><td class="rate-cell">$10,100</td><td><span class="s-pill wait"><div class="pill-dot"></div>AI Matching</span></td><td>— Searching</td></tr>
+                <tr><td><span class="lid">FIQ-4825</span></td><td>Phoenix, AZ</td><td>Miami, FL</td><td><span class="type-tag">Hot Shot OTR</span></td><td class="rate-cell">$7,650</td><td><span class="s-pill done"><div class="pill-dot"></div>Delivered</span></td><td>FastHaul #3301</td></tr>
+                <tr><td><span class="lid">FIQ-4826</span></td><td>Sacramento, CA</td><td>Charlotte, NC</td><td><span class="type-tag">Reefer Produce</span></td><td class="rate-cell">$9,400</td><td><span class="s-pill go"><div class="pill-dot"></div>Dispatched</span></td><td>WestCoast #7712</td></tr>
+              </tbody>
+            </table>
           </div>
-          <div style="padding:12px;background:rgba(255,176,32,.06);border:1px solid rgba(255,176,32,.15);border-radius:9px;font-size:12px;color:var(--t2)">
-            ⚠️ <strong style="color:var(--amber)">Expiration Alert:</strong> Sara Patel's CDL expires in 55 days. Schedule renewal now to avoid compliance issues.
-          </div>
-          <div style="margin-top:12px;padding:12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:9px;font-size:12px;color:var(--t2)">
-            📊 <strong style="color:var(--purple)">Storage:</strong> 47 documents stored · 2.4 GB used of 10 GB
-          </div>
-        </div>
-      </div>
+
+        </div><!-- /tms-body -->
+      </div><!-- /tms-content -->
+    </div><!-- /tms-shell -->
+  </div><!-- /browser -->
+</section>
+
+<!-- ══ PROBLEM ══ -->
+<section id="problem">
+  <div class="s-tag">The Problem</div>
+  <h2>Premium Freight Is Being Treated Like Commodity Shipping</h2>
+  <p class="s-lead">The platforms that handle the most volume are the worst at serving the highest-value freight. That gap is costing shippers, carriers, and the entire supply chain billions annually.</p>
+  <div class="divbar"></div>
+  <div class="prob-grid reveal">
+    <div class="prob-card"><div class="prob-n">30–60</div><h3>Days Carriers Wait to Get Paid</h3><p>Cash flow kills capacity. Carriers who can't pay drivers or fuel can't take your load — especially the specialized ones you need most.</p></div>
+    <div class="prob-card"><div class="prob-n">20%</div><h3>Reefer Tender Rejection Rate</h3><p>One in five temperature-controlled loads gets rejected. Cold chain capacity is shrinking as demand for pharma and produce freight keeps rising.</p></div>
+    <div class="prob-card"><div class="prob-n">174K</div><h3>Driver Shortage by End of 2026</h3><p>The national deficit makes specialized, verified carrier networks the only reliable path for premium freight shippers who cannot afford failure.</p></div>
+    <div class="prob-card"><div class="prob-n">$0</div><h3>Platforms Purpose-Built for Pharma</h3><p>Uber Freight manages $20B+ but is not engineered for time-critical specialized freight. That gap is the entire market opportunity for FreightIQ USA.</p></div>
+  </div>
+</section>
+
+<!-- ══ PILLARS ══ -->
+<section id="pillars">
+  <div class="s-tag">The Solution</div>
+  <h2>AI-First. Reliability-Driven. Built to Scale.</h2>
+  <p class="s-lead">Four core capabilities no existing freight platform has combined into a single purpose-built TMS for premium freight operations.</p>
+  <div class="divbar"></div>
+  <div class="pill-grid reveal">
+    <div class="pill-card pb"><div class="pill-tag b">Payments</div><div class="pill-ico">⚡</div><h3>Instant Carrier Payment</h3><p>Carriers get paid the day the load delivers. We eliminate factoring fees and the 30–60 day wait, creating carrier loyalty no load board can compete with.</p><ul><li>Same-day ACH on delivery confirmation</li><li>Zero factoring fees or broker delays</li><li>Carrier trust score improvement</li><li>Priority dispatch access for top performers</li></ul></div>
+    <div class="pill-card pg"><div class="pill-tag g">Matching</div><div class="pill-ico">🎯</div><h3>Reliability-Based AI Matching</h3><p>We don't match on cheapest price. We match on verified on-time record, cold chain compliance, equipment condition, and load-type specialization.</p><ul><li>Carrier reliability scoring engine</li><li>Load-type specialization tags</li><li>Dynamic acceptance prediction</li><li>Lane-level performance analytics</li></ul></div>
+    <div class="pill-card pa"><div class="pill-tag a">Cold Chain</div><div class="pill-ico">🌡️</div><h3>Real-Time Cold Chain Monitoring</h3><p>Temperature, GPS, humidity, and door events streamed live. Automatic alerts on excursions. Full FSMA and FDA compliance documentation.</p><ul><li>IoT sensor integrations</li><li>Automated excursion alerts</li><li>FSMA 204 compliance reporting</li><li>Chain-of-custody audit trail</li></ul></div>
+    <div class="pill-card pc"><div class="pill-tag c">Intelligence</div><div class="pill-ico">🤖</div><h3>AI Route &amp; Rate Optimization</h3><p>Predictive routing, deadhead minimization, and rate intelligence on every load. The AI learns each carrier's ideal lane profile and matches accordingly.</p><ul><li>Deadhead mile reduction engine</li><li>Dynamic rate benchmarking</li><li>Capacity forecasting by lane</li><li>Rejection risk prediction</li></ul></div>
+  </div>
+</section>
+
+<!-- ══ MARKET ══ -->
+<section id="market">
+  <div class="s-tag">Market Opportunity</div>
+  <h2>Entering the Right Market at the Right Moment</h2>
+  <p class="s-lead">The digital freight market is one of the fastest-growing sectors in technology. We enter the highest-margin segment at the moment supply constraints give platforms maximum pricing leverage.</p>
+  <div class="divbar"></div>
+  <div class="mkt-hero reveal"><div class="big-n">$405B</div><p>Total Addressable Market — Digital Freight Matching &amp; Logistics Technology (2024–2030)</p></div>
+  <div class="mkt-grid reveal">
+    <div class="mkt-stat"><div class="ms-num b">22%</div><div class="ms-lbl">Market CAGR</div><div class="ms-desc">Digital freight growing nearly twice as fast as overall logistics through 2030.</div></div>
+    <div class="mkt-stat"><div class="ms-num g">11.86%</div><div class="ms-lbl">Healthcare Logistics CAGR</div><div class="ms-desc">Pharma cold chain is the fastest-growing subcategory in North American freight.</div></div>
+    <div class="mkt-stat"><div class="ms-num c">15–16%</div><div class="ms-lbl">Reefer Port Volume Growth</div><div class="ms-desc">Temperature-controlled volumes surging as produce import/export demand accelerates.</div></div>
+    <div class="mkt-stat"><div class="ms-num a">$10K</div><div class="ms-lbl">CA → East Coast Rate</div><div class="ms-desc">California citrus and produce lanes commanding $9,400–$10,000+ per load.</div></div>
+    <div class="mkt-stat"><div class="ms-num b">30–50%</div><div class="ms-lbl">Premium Over Commodity</div><div class="ms-desc">Healthcare and pharma loads consistently out-price standard dry van freight.</div></div>
+    <div class="mkt-stat"><div class="ms-num g">$20B+</div><div class="ms-lbl">Uber Freight Annual Volume</div><div class="ms-desc">The largest player does not specialize in our segment — confirming the gap.</div></div>
+  </div>
+</section>
+
+<!-- ══ MODEL ══ -->
+<section id="model">
+  <div class="s-tag">Business Model</div>
+  <h2>Simple Unit Economics. Exceptional Margins.</h2>
+  <p class="s-lead">A 7% take rate on premium loads averaging $8,000–$10,000 produces one of the strongest per-transaction revenue models in logistics tech.</p>
+  <div class="divbar"></div>
+  <div class="econ-wrap reveal">
+    <div class="econ-label">Per Transaction Revenue Flow</div>
+    <div class="econ-row">
+      <div class="econ-box"><div class="econ-v b">$8K–$10K</div><div class="econ-l">Avg Load Value</div></div>
+      <div class="econ-op">×</div>
+      <div class="econ-box"><div class="econ-v c">7%</div><div class="econ-l">Take Rate</div></div>
+      <div class="econ-op">=</div>
+      <div class="econ-box"><div class="econ-v g">$560–$700</div><div class="econ-l">Platform Revenue</div></div>
+      <div class="econ-op">@</div>
+      <div class="econ-box"><div class="econ-v b">60%+</div><div class="econ-l">Gross Margin</div></div>
     </div>
+  </div>
+  <div class="proj-row reveal">
+    <div class="proj-card y1"><div class="proj-yr">Year 1</div><div class="proj-rev">$150K</div><div class="proj-note">First 2–3 anchor customers. Model validation. Case study development.</div><div class="proj-ms">~18–25 loads/month</div></div>
+    <div class="proj-card y2"><div class="proj-yr">Year 2</div><div class="proj-rev">$1M+</div><div class="proj-note">100+ active carriers. Expanded shipper base. Network effects compound.</div><div class="proj-ms">~130 loads/month</div></div>
+    <div class="proj-card y3"><div class="proj-yr">Year 3</div><div class="proj-rev">$3.5M+</div><div class="proj-note">500 loads/month. Regional dominance. Full OTR/intermodal integration.</div><div class="proj-ms">500 loads/month</div></div>
+  </div>
+  <div style="margin-top:1.25rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap" class="reveal">
+    <div style="font-size:1.75rem">📊</div>
+    <div style="flex:1"><div style="font-weight:700;margin-bottom:.2rem">Month 18 Milestone: 500 Loads/Month</div><div style="color:var(--muted);font-size:.85rem">500 loads × $700 avg revenue = <strong style="color:var(--green-lt)">$4.2M annualized run rate</strong> at 60%+ gross margin</div></div>
+    <div style="text-align:right"><div style="font-size:1.5rem;font-weight:900;color:var(--green-lt)">$4.2M</div><div style="font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.09em">ARR at Month 18</div></div>
+  </div>
+</section>
 
-    <!-- ALERTS -->
-    <div id="carrier-alerts" class="scr">
-      <div class="phdr"><div><div class="plabel">// Notifications</div><div class="ptitle">Smart Alerts 🔔</div><div class="psub">AI monitors your fleet 24/7 and alerts you to what matters</div></div></div>
-      <div class="g2">
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">Today's Alerts</div>
-          <div class="alert-item"><div class="alert-dot-wrap"><div class="alert-dot" style="background:var(--red);box-shadow:0 0 6px var(--red)"></div></div><div><div class="alert-text"><strong>Invoice Overdue</strong> — Echo Global INV-221 ($3,200) is 15 days past due. Draft reminder?</div><div class="alert-time">2 hours ago</div></div></div>
-          <div class="alert-item"><div class="alert-dot-wrap"><div class="alert-dot" style="background:var(--green);box-shadow:0 0 6px var(--green)"></div></div><div><div class="alert-text"><strong>Rate Spike!</strong> LA→Phoenix up 22% to $6.80/mi — limited loads available</div><div class="alert-time">45 min ago</div></div></div>
-          <div class="alert-item"><div class="alert-dot-wrap"><div class="alert-dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan)"></div></div><div><div class="alert-text"><strong>Invoice Auto-Sent</strong> — INV-228 generated & emailed to Coyote Logistics ($5,800)</div><div class="alert-time">1 hour ago</div></div></div>
-          <div class="alert-item"><div class="alert-dot-wrap"><div class="alert-dot" style="background:var(--amber);box-shadow:0 0 6px var(--amber)"></div></div><div><div class="alert-text"><strong>CDL Expiring</strong> — Sara Patel's CDL expires in 55 days. Renewal needed.</div><div class="alert-time">This morning</div></div></div>
-          <div class="alert-item"><div class="alert-dot-wrap"><div class="alert-dot" style="background:var(--purple);box-shadow:0 0 6px var(--purple)"></div></div><div><div class="alert-text"><strong>Payment Received</strong> — TQL paid INV-219 ($2,750) — deposited to account</div><div class="alert-time">Yesterday</div></div></div>
-        </div>
-        <div class="card">
-          <div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:14px">Alert Settings</div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:9px"><span style="font-size:13px;color:var(--text)">Rate spikes on my lanes</span><div style="width:38px;height:20px;background:var(--orange);border-radius:10px;position:relative;cursor:pointer"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:9px"><span style="font-size:13px;color:var(--text)">Invoice overdue (15 days)</span><div style="width:38px;height:20px;background:var(--orange);border-radius:10px;position:relative;cursor:pointer"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:9px"><span style="font-size:13px;color:var(--text)">HOS violation warnings</span><div style="width:38px;height:20px;background:var(--orange);border-radius:10px;position:relative;cursor:pointer"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:9px"><span style="font-size:13px;color:var(--text)">Document expiration (60 days)</span><div style="width:38px;height:20px;background:var(--green);border-radius:10px;position:relative;cursor:pointer"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:9px"><span style="font-size:13px;color:var(--text)">Fuel price alerts</span><div style="width:38px;height:20px;background:var(--green);border-radius:10px;position:relative;cursor:pointer"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
-          </div>
-        </div>
-      </div>
+<!-- ══ COLLAB ══ -->
+<section id="collab">
+  <div class="s-tag">Strategic Partnership</div>
+  <h2>Building Together: OTR + Intermodal + Premium Freight</h2>
+  <p class="s-lead">Active discussions to build the first unified AI TMS that covers both specialized premium freight and broad OTR/intermodal coverage — one platform, end-to-end.</p>
+  <div class="divbar"></div>
+  <div class="collab-grid reveal">
+    <div class="collab-main">
+      <div class="collab-eye">🤝 Active Partnership Discussions</div>
+      <h2 style="font-size:1.55rem;margin-bottom:.875rem">The Combined Vision</h2>
+      <p>FreightIQ USA specializes in the highest-margin freight: pharma, healthcare, hot shot, and time-critical produce. Our strategic OTR/intermodal partner brings broad lane coverage, intermodal carrier relationships, and complementary platform technology.</p>
+      <p>Together, we build what neither platform could build alone — a single AI TMS covering every freight type, every lane, every mode. Shippers work with one platform. Carriers access both networks. AI optimizes across the full combined load pool.</p>
+      <p style="color:var(--off);font-weight:600">This is not a referral agreement. This is a technology and network integration — the foundation of a unified freight intelligence platform built to compete at national scale.</p>
+      <a href="#cta" class="btn-main" style="font-size:.85rem;padding:.75rem 1.5rem;margin-top:.875rem;display:inline-flex">Explore This Partnership →</a>
     </div>
-
-    <!-- TRACKING, INVOICES, PAYMENTS, IFTA, DRIVERS (compact) -->
-    <div id="carrier-tracking" class="scr">
-      <div class="phdr"><div><div class="plabel">// GPS Fleet</div><div class="ptitle">Live Tracking 📍</div></div></div>
-      <div class="g12"><div class="card"><div class="map-box"><div class="map-grid"></div><div class="map-route-line"></div><div class="map-pin" style="left:12%;margin-top:-9px;margin-left:-9px">🔴</div><div class="map-pin" style="right:12%;margin-top:-9px;margin-right:-9px">🔵</div><div class="map-truck" style="position:absolute;top:50%;left:55%;transform:translateY(-50%);font-size:20px">🚛</div><div class="map-label-box">LA → Dallas · Mike Torres · 58% · ETA Apr 22</div></div></div>
-      <div class="card"><div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:12px">All Trucks</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="padding:12px;background:var(--bg3);border-radius:11px;border:1px solid rgba(0,212,255,.2)"><div style="font-weight:600;color:#fff;margin-bottom:4px">T-01 · Mike Torres</div><div class="pbar-wrap" style="margin-bottom:4px"><div class="pbar"><div class="pfill" style="width:58%;background:linear-gradient(90deg,var(--orange),var(--amber))"></div></div><span style="font-size:10px;color:var(--t2)">58%</span></div><div style="font-size:11px;color:var(--t3)">LA → Dallas · ETA Apr 22 6PM</div></div>
-          <div style="padding:12px;background:var(--bg3);border-radius:11px;border:1px solid rgba(0,229,160,.2)"><div style="font-weight:600;color:#fff;margin-bottom:4px">T-02 · James Rivera</div><div style="font-size:11px;color:var(--green)">✓ Delivered · Phoenix→Chicago · Available for next load</div></div>
-          <div style="padding:12px;background:var(--bg3);border-radius:11px;border:1px solid rgba(255,176,32,.2)"><div style="font-weight:600;color:#fff;margin-bottom:4px">T-03 · Sara Patel</div><div class="pbar-wrap" style="margin-bottom:4px"><div class="pbar"><div class="pfill" style="width:22%;background:var(--amber)"></div></div><span style="font-size:10px;color:var(--t2)">22%</span></div><div style="font-size:11px;color:var(--t3)">Denver → Atlanta · ETA Apr 23</div></div>
-        </div>
-      </div></div>
+    <div class="collab-list">
+      <div class="col-item"><div class="col-ico">🚛</div><div><h4>Hot Shot + Time-Critical Coverage</h4><p>FreightIQ owns the urgent, high-margin specialist segment — premium loads, premium rates, premium reliability standards.</p></div></div>
+      <div class="col-item"><div class="col-ico">🔗</div><div><h4>OTR + Intermodal Scale</h4><p>Partner platform brings volume lanes, intermodal carrier relationships, and coast-to-coast coverage for standard freight types.</p></div></div>
+      <div class="col-item"><div class="col-ico">🤖</div><div><h4>Shared AI Intelligence Layer</h4><p>Route optimization, carrier scoring, and load matching enhanced by combined network data — exponentially more powerful together.</p></div></div>
+      <div class="col-item"><div class="col-ico">⚡</div><div><h4>Unified Same-Day Payment Rail</h4><p>One instant payment infrastructure across both platforms — carriers get paid fast on every load, regardless of freight type or mode.</p></div></div>
+      <div class="col-item"><div class="col-ico">🏭</div><div><h4>Single Shipper Relationship</h4><p>Shippers who need urgent hot shot today and intermodal scale tomorrow manage everything through one account and one platform.</p></div></div>
     </div>
+  </div>
+</section>
 
-    <div id="carrier-invoices" class="scr">
-      <div class="phdr"><div><div class="plabel">// Auto Billing</div><div class="ptitle">AI Invoices 📄</div></div><button class="btn btn-p">📎 Upload Rate Con</button></div>
-      <div class="g2">
-        <div class="card"><div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:12px">Recent Invoices</div><table class="tbl"><thead><tr><th>Invoice</th><th>Broker</th><th>Amount</th><th>Status</th></tr></thead><tbody>
-          <tr><td><span style="font-family:var(--mono);color:var(--orange);font-size:12px">INV-228</span></td><td>Coyote Logistics</td><td><strong>$5,800</strong></td><td><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Sent ✓</span></td></tr>
-          <tr><td><span style="font-family:var(--mono);color:var(--orange);font-size:12px">INV-227</span></td><td>Echo Global</td><td><strong>$3,200</strong></td><td><span class="tag" style="background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);color:var(--red)">Overdue</span></td></tr>
-          <tr><td><span style="font-family:var(--mono);color:var(--orange);font-size:12px">INV-226</span></td><td>TQL</td><td><strong>$2,750</strong></td><td><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Pending</span></td></tr>
-        </tbody></table></div>
-        <div style="background:linear-gradient(135deg,#fff,#f8faff);border-radius:14px;padding:18px;color:#111;font-size:12px"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #FF4D00;padding-bottom:10px;margin-bottom:12px"><div><div style="font-family:var(--display);font-size:16px;font-weight:800;color:#FF4D00">🚛 FreightIQ</div><div style="font-size:9px;color:#888">AI-Generated</div></div><div style="text-align:right"><div style="font-family:var(--display);font-size:20px;font-weight:800">INVOICE</div><div style="font-size:10px;color:#888">#INV-228 · Apr 21</div></div></div>
-          <div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Load #L-4805</span><span style="font-weight:600">PHX → Chicago</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Freight</span><span style="font-weight:600">$5,800.00</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;font-size:14px;font-weight:800;color:#FF4D00"><span>TOTAL DUE</span><span>$5,800.00</span></div></div>
-        </div>
-      </div>
+<!-- ══ WHY NOW ══ -->
+<section id="whynow">
+  <div class="s-tag">Why Now</div>
+  <h2>Six Forces Converging Right Now</h2>
+  <p class="s-lead">The window to build this platform is open. In 24 months it will be three times harder and five times more expensive to enter this market.</p>
+  <div class="divbar"></div>
+  <div class="why-grid reveal">
+    <div class="why-card"><h3>🚚 Capacity Shortage = Pricing Power</h3><p>The reefer capacity gap and driver shortage means premium shippers have nowhere to go. We enter with captive demand already in place.</p></div>
+    <div class="why-card"><h3>🤖 AI Makes Specialization Viable</h3><p>What once required 50 engineers and $10M can now be built by a lean team with AI. The barriers to entry just dropped — and we are moving first.</p></div>
+    <div class="why-card"><h3>⚖️ Regulatory Tailwinds</h3><p>The Self Drive Act of 2026 opens autonomous freight corridors. Platforms with verified specialized networks become the infrastructure layer.</p></div>
+    <div class="why-card"><h3>🌱 Produce &amp; Pharma Growth Durable</h3><p>Healthcare logistics CAGR 11.86%. Port reefer volumes up 15–16%. Structural growth trends lasting a decade or more.</p></div>
+    <div class="why-card"><h3>💸 Factoring Market Ripe for Disruption</h3><p>Traditional freight factoring charges 2–5% on top of standard terms. Platform-integrated instant payment captures that margin structurally.</p></div>
+    <div class="why-card"><h3>🔗 Intermodal Integration Timing</h3><p>OTR/intermodal partnerships are forming right now. Building the unified platform before competitors recognize the segment is the entire strategic advantage.</p></div>
+  </div>
+</section>
+
+<!-- ══ TRACTION ══ -->
+<section id="traction">
+  <div class="s-tag">Where We Are</div>
+  <h2>Early Stage. Real Foundation. Moving Fast.</h2>
+  <p class="s-lead">This is not a concept pitch. Platform architecture is built. Anchor customer conversations are open. Go-to-market validated by direct operational experience.</p>
+  <div class="divbar"></div>
+  <div class="trac-grid reveal">
+    <div class="trac-card"><div class="trac-ico">✅</div><h3>Platform Architecture Complete</h3><p>TMS infrastructure, carrier payment module, and AI matching engine built and in active testing.</p></div>
+    <div class="trac-card"><div class="trac-ico">🌾</div><h3>CA Produce Shippers Identified</h3><p>In active discussions with California's largest produce shippers — the highest-value freight lane in North America.</p></div>
+    <div class="trac-card"><div class="trac-ico">🤝</div><h3>OTR/Intermodal Partnership Active</h3><p>Strategic collaboration discussions underway. Joint go-to-market strategy in development. Combined architecture being scoped.</p></div>
+    <div class="trac-card"><div class="trac-ico">📐</div><h3>GTM Validated by Experience</h3><p>5+ years of direct logistics operations across dispatch, brokerage, and shipper development. We know the market from the inside.</p></div>
+    <div class="trac-card"><div class="trac-ico">🎯</div><h3>First Pilots: Next 90 Days</h3><p>Closing 2–3 anchor customers within 90 days. Unit economics proven by real transactions. First case studies ready.</p></div>
+    <div class="trac-card"><div class="trac-ico">🌐</div><h3>Platform Live on GitHub Pages</h3><p>Open showcase for investor review, shipper demo, and partnership evaluation — live at freightIQUSATMS.github.io.</p></div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="s-tag" style="display:block;text-align:center">Get Involved</div>
+    <h2>The Market Is Massive.<br/><span class="grad-text">The Timing Is Now.</span></h2>
+    <p>Whether you are a shipper who needs reliable premium freight coverage, a carrier who wants same-day payment, an investor who sees the gap, or a technology partner building adjacent capabilities — there is a seat at this table for you.</p>
+    <div class="cta-grid reveal">
+      <a href="mailto:battanrahul87@gmail.com" class="cta-card"><div class="cta-ico">🏭</div><h3>Shippers</h3><p>Guaranteed coverage for pharma, healthcare, produce, and hot shot at premium reliability standards.</p></a>
+      <a href="mailto:battanrahul87@gmail.com" class="cta-card"><div class="cta-ico">🚛</div><h3>Carriers</h3><p>Access premium loads with same-day payment, no factoring fees, and a reputation system that rewards the best.</p></a>
+      <a href="mailto:battanrahul87@gmail.com" class="cta-card"><div class="cta-ico">📋</div><h3>Brokers</h3><p>Join as an authorized broker partner with full CRM, commission tracking, and shipper relationship tools.</p></a>
+      <a href="mailto:battanrahul87@gmail.com" class="cta-card"><div class="cta-ico">🔗</div><h3>Tech Partners</h3><p>Building in OTR, intermodal, ELD, or IoT? Let's explore integration and growth together.</p></a>
+      <a href="mailto:battanrahul87@gmail.com" class="cta-card"><div class="cta-ico">💼</div><h3>Investors</h3><p>Seed round open. Unit economics proven. $405B market. 22% CAGR. Opportunity brief ready.</p></a>
     </div>
+    <a href="mailto:battanrahul87@gmail.com" class="btn-main" style="font-size:.97rem;padding:1rem 2.5rem">Start the Conversation →</a>
+    <p class="cta-contact" style="margin-top:1.25rem">
+      <a href="mailto:battanrahul87@gmail.com">battanrahul87@gmail.com</a> &nbsp;·&nbsp;
+      <a href="https://www.linkedin.com/in/ACoAAFbvL98BIPDYUFBrX3wXbCZjCKNrsRoFMyA" target="_blank">LinkedIn — Rahul Battan</a> &nbsp;·&nbsp;
+      <a href="https://rahulusalogistics.github.io/freightIQUSATMS/" target="_blank">freightIQUSATMS.github.io</a>
+    </p>
+  </div>
+</section>
 
-    <div id="carrier-payments" class="scr">
-      <div class="phdr"><div><div class="plabel">// Finance</div><div class="ptitle">Payments 💰</div></div><button class="btn btn-p">📧 Send All Reminders</button></div>
-      <div class="kgrid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
-        <div class="kcard"><div class="klabel">Outstanding</div><div class="kval" style="color:var(--amber)">$14,200</div></div>
-        <div class="kcard"><div class="klabel">Overdue</div><div class="kval" style="color:var(--red)">$3,200</div></div>
-        <div class="kcard"><div class="klabel">Paid This Month</div><div class="kval" style="color:var(--green)">$18,400</div></div>
-        <div class="kcard"><div class="klabel">Avg Days to Pay</div><div class="kval">18</div></div>
-      </div>
-      <div class="card"><table class="tbl"><thead><tr><th>Invoice</th><th>Broker</th><th>Amount</th><th>Due</th><th>Days Out</th><th>Status</th><th>Action</th></tr></thead><tbody>
-        <tr><td><span style="font-family:var(--mono);color:var(--orange);font-size:12px">INV-221</span></td><td><strong style="color:#fff">Echo Global</strong></td><td><strong>$3,200</strong></td><td style="color:var(--t2)">Apr 5</td><td><strong style="color:var(--red);font-family:var(--mono)">+15d</strong></td><td><span class="tag" style="background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);color:var(--red)">Overdue</span></td><td><button class="btn btn-p" style="padding:4px 12px;font-size:11px">Remind</button></td></tr>
-        <tr><td><span style="font-family:var(--mono);color:var(--orange);font-size:12px">INV-218</span></td><td><strong style="color:#fff">TQL</strong></td><td><strong>$2,750</strong></td><td style="color:var(--t2)">Apr 12</td><td><strong style="color:var(--amber);font-family:var(--mono)">+8d</strong></td><td><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Pending</span></td><td><button class="btn btn-g" style="padding:4px 12px;font-size:11px">Remind</button></td></tr>
-        <tr><td><span style="font-family:var(--mono);color:var(--orange);font-size:12px">INV-210</span></td><td><strong style="color:#fff">Coyote</strong></td><td><strong>$2,900</strong></td><td style="color:var(--t2)">Mar 28</td><td><span style="color:var(--green);font-family:var(--mono)">Paid</span></td><td><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Paid ✓</span></td><td>—</td></tr>
-      </tbody></table></div>
-    </div>
-
-    <div id="carrier-ifta" class="scr">
-      <div class="phdr"><div><div class="plabel">// Tax</div><div class="ptitle">IFTA Reports 📊</div><div class="psub">Q1 2026 · Due April 30</div></div><button class="btn btn-p">📥 Download PDF</button></div>
-      <div class="kgrid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"><div class="kcard"><div class="klabel">Total Miles</div><div class="kval">23,130</div></div><div class="kcard"><div class="klabel">Gallons</div><div class="kval">3,848</div></div><div class="kcard"><div class="klabel">Tax Owed</div><div class="kval" style="color:var(--amber)">$847</div></div><div class="kcard"><div class="klabel">States</div><div class="kval">4</div></div></div>
-      <div class="card"><table class="tbl"><thead><tr><th>State</th><th>Miles</th><th>Gallons</th><th>Rate</th><th>Tax Owed</th></tr></thead><tbody>
-        <tr><td><strong style="color:#fff">California</strong></td><td>12,840</td><td>2,140</td><td style="color:var(--t2)">$0.774</td><td><strong style="color:var(--amber)">$312.40</strong></td></tr>
-        <tr><td><strong style="color:#fff">Arizona</strong></td><td>4,210</td><td>702</td><td style="color:var(--t2)">$0.260</td><td><strong style="color:var(--amber)">$182.52</strong></td></tr>
-        <tr><td><strong style="color:#fff">Texas</strong></td><td>3,980</td><td>663</td><td style="color:var(--t2)">$0.200</td><td><strong style="color:var(--amber)">$132.60</strong></td></tr>
-        <tr><td><strong style="color:#fff">Illinois</strong></td><td>2,100</td><td>350</td><td style="color:var(--t2)">$0.627</td><td><strong style="color:var(--amber)">$219.45</strong></td></tr>
-      </tbody></table></div>
-    </div>
-
-    <div id="carrier-drivers" class="scr">
-      <div class="phdr"><div><div class="plabel">// Team</div><div class="ptitle">Drivers 👤</div></div><button class="btn btn-p">+ Add Driver</button></div>
-      <div class="g3">
-        <div class="card" style="text-align:center"><div style="width:52px;height:52px;background:linear-gradient(135deg,var(--orange),var(--amber));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px">👤</div><div style="font-family:var(--display);font-weight:700;font-size:15px;color:#fff">Mike Torres</div><div style="font-size:11px;color:var(--t2);margin-bottom:10px">T-01 · Kenworth T680</div><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">In Transit</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">LOADS MTD</div><div style="font-size:17px;font-weight:700;color:#fff">6</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">REVENUE</div><div style="font-size:17px;font-weight:700;color:var(--green)">$9.8K</div></div></div></div>
-        <div class="card" style="text-align:center"><div style="width:52px;height:52px;background:linear-gradient(135deg,var(--cyan),var(--purple));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px">👤</div><div style="font-family:var(--display);font-weight:700;font-size:15px;color:#fff">James Rivera</div><div style="font-size:11px;color:var(--t2);margin-bottom:10px">T-02 · Freightliner</div><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Available</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">LOADS MTD</div><div style="font-size:17px;font-weight:700;color:#fff">5</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">REVENUE</div><div style="font-size:17px;font-weight:700;color:var(--green)">$8.9K</div></div></div></div>
-        <div class="card" style="text-align:center"><div style="width:52px;height:52px;background:linear-gradient(135deg,var(--green),var(--cyan));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px">👤</div><div style="font-family:var(--display);font-weight:700;font-size:15px;color:#fff">Sara Patel</div><div style="font-size:11px;color:var(--t2);margin-bottom:10px">T-03 · Peterbilt 389</div><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">In Transit</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">LOADS MTD</div><div style="font-size:17px;font-weight:700;color:#fff">3</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">REVENUE</div><div style="font-size:17px;font-weight:700;color:var(--green)">$6.1K</div></div></div></div>
-      </div>
-    </div>
-
-    <!-- ALL FEATURES -->
-    <div id="carrier-features" class="scr">
-      <div class="phdr"><div><div class="plabel">// Complete Feature Set</div><div class="ptitle">All FreightIQ Features ✨</div><div class="psub">Everything you get — Core + New AI features</div></div></div>
-      <div style="margin-bottom:14px;display:flex;gap:8px;align-items:center"><span class="tag" style="background:rgba(255,77,0,.1);border:1px solid rgba(255,77,0,.25);color:var(--orange)">CORE</span><span style="font-size:12px;color:var(--t2)">Original features</span><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.25);color:var(--green);margin-left:12px">NEW</span><span style="font-size:12px;color:var(--t2)">Newly added features</span></div>
-      <div class="feat-grid">
-        <div class="feat-box"><div class="feat-em">🔍</div><div class="feat-title">DAT Load Search</div><div class="feat-desc">Live DAT board integration. Search 1.4M+ daily loads directly inside FreightIQ.</div><span class="feat-tag-core">CORE</span></div>
-        <div class="feat-box"><div class="feat-em">🤖</div><div class="feat-title">AI Load Ranking</div><div class="feat-desc">Scores every load 1-100 by net profit per mile. Green = book it. Red = skip it.</div><span class="feat-tag-core">CORE</span></div>
-        <div class="feat-box"><div class="feat-em">📄</div><div class="feat-title">Auto Invoicing</div><div class="feat-desc">Upload rate confirmation → AI reads it → invoice generated & emailed to broker in 10 sec.</div><span class="feat-tag-core">CORE</span></div>
-        <div class="feat-box"><div class="feat-em">💰</div><div class="feat-title">Payment Tracker</div><div class="feat-desc">Track every invoice. Auto follow-up at 15/30/45 days. Flags slow-paying brokers.</div><span class="feat-tag-core">CORE</span></div>
-        <div class="feat-box"><div class="feat-em">📊</div><div class="feat-title">IFTA Auto-Reports</div><div class="feat-desc">One-click quarterly IFTA fuel tax report. Audit-ready, formatted for every state.</div><span class="feat-tag-core">CORE</span></div>
-        <div class="feat-box"><div class="feat-em">📍</div><div class="feat-title">Live GPS Tracking</div><div class="feat-desc">Real-time truck locations, ETA, progress. Full visibility on every load.</div><span class="feat-tag-core">CORE</span></div>
-        <div class="feat-box"><div class="feat-em">💬</div><div class="feat-title">AI Chat Assistant</div><div class="feat-desc">Ask anything — best loads, who owes you, weekly profit, IFTA, route planning. Instant answers.</div><span class="feat-tag-new">NEW ✨</span></div>
-        <div class="feat-box"><div class="feat-em">⚡</div><div class="feat-title">Factoring Connect</div><div class="feat-desc">Get paid in 24 hours. Connect OTR Capital, RTS Financial, or Triumph directly in the app.</div><span class="feat-tag-new">NEW ✨</span></div>
-        <div class="feat-box"><div class="feat-em">🧾</div><div class="feat-title">Expense Tracker</div><div class="feat-desc">Track fuel, maintenance, insurance, tolls. AI categorizes automatically. QuickBooks sync.</div><span class="feat-tag-new">NEW ✨</span></div>
-        <div class="feat-box"><div class="feat-em">🤝</div><div class="feat-title">Rate Negotiator</div><div class="feat-desc">Live market rate intel per lane. AI tells you exactly what to say to get a higher rate from brokers.</div><span class="feat-tag-new">NEW ✨</span></div>
-        <div class="feat-box"><div class="feat-em">📡</div><div class="feat-title">ELD / HOS Tracking</div><div class="feat-desc">Connect Samsara or KeepTruckin. Real-time Hours of Service. Violation alerts before they happen.</div><span class="feat-tag-new">NEW ✨</span></div>
-        <div class="feat-box"><div class="feat-em">🗄️</div><div class="feat-title">Document Vault</div><div class="feat-desc">Store all BOLs, PODs, rate cons, insurance, CDLs. AI reads any PDF and extracts data instantly.</div><span class="feat-tag-new">NEW ✨</span></div>
-        <div class="feat-box"><div class="feat-em">🔔</div><div class="feat-title">Smart Alerts</div><div class="feat-desc">AI monitors everything 24/7. Rate spikes, overdue invoices, HOS violations, expiring docs.</div><span class="feat-tag-new">NEW ✨</span></div>
-        <div class="feat-box"><div class="feat-em">🏢</div><div class="feat-title">Broker Pro</div><div class="feat-desc">Post loads, manage carriers, send tenders, track margins. Full broker TMS at $299/mo.</div><span class="feat-tag-core">PRO</span></div>
-        <div class="feat-box"><div class="feat-em">📦</div><div class="feat-title">Shipper Pro</div><div class="feat-desc">RFQ center, preferred carrier network, shipment visibility, freight spend analytics.</div><span class="feat-tag-core">PRO</span></div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- BROKER/SHIPPER modes kept compact -->
-<div id="mode-broker" class="wrap" style="display:none">
-  <aside class="sidebar"><div class="sb-section">Broker Pro</div>
-    <button class="nitem on" onclick="showBScr('bh',this)"><span class="ni-icon">◈</span><span>Overview</span></button>
-    <button class="nitem" onclick="showBScr('bl',this)"><span class="ni-icon">📋</span><span>Post Loads</span></button>
-    <button class="nitem" onclick="showBScr('bc',this)"><span class="ni-icon">🚛</span><span>Carriers</span></button>
-    <button class="nitem" onclick="showBScr('bt',this)"><span class="ni-icon">📨</span><span>Tenders</span></button>
-    <button class="nitem" onclick="showBScr('bm',this)"><span class="ni-icon">💹</span><span>Margin Report</span></button>
-    <div class="sb-bottom"><div class="plan-card" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(0,212,255,.06));border-color:rgba(139,92,246,.3)"><div class="plan-title">Broker Pro ✓</div><div class="plan-sub">Unlimited loads active</div><button class="plan-btn" style="background:linear-gradient(135deg,var(--purple),var(--cyan))">Active Plan</button></div></div>
-  </aside>
-  <main class="main">
-    <div id="bh" class="scr on"><div class="phdr"><div><div class="plabel" style="color:var(--purple)">// Broker Pro</div><div class="ptitle">Operations Center</div><div class="psub">24 active loads · 8 carriers · $142K revenue</div></div><button class="btn btn-purple">+ Post Load</button></div>
-    <div class="kgrid"><div class="kcard"><div class="klabel">Loads This Month</div><div class="kval">86</div><div class="kdelta up" style="color:var(--purple)">24 active</div><div class="kbar"><div class="kfill" style="width:72%;background:var(--purple)"></div></div></div><div class="kcard"><div class="klabel">Gross Revenue</div><div class="kval">$142K</div><div class="kdelta up">↑ 18%</div><div class="kbar"><div class="kfill" style="width:80%;background:var(--green)"></div></div></div><div class="kcard"><div class="klabel">Avg Margin</div><div class="kval">18.4%</div><div class="kdelta up" style="color:var(--cyan)">↑ 2.1%</div><div class="kbar"><div class="kfill" style="width:55%;background:var(--cyan)"></div></div></div><div class="kcard"><div class="klabel">On-Time</div><div class="kval">94%</div><div class="kdelta up">vs 89% avg</div><div class="kbar"><div class="kfill" style="width:94%;background:var(--green)"></div></div></div></div>
-    <div class="card"><div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:12px">Active Shipments</div><table class="tbl"><thead><tr><th>Load</th><th>Lane</th><th>Carrier</th><th>Status</th><th>Margin</th></tr></thead><tbody><tr><td><span style="font-family:var(--mono);color:var(--purple)">BL-9041</span></td><td>Chicago → Atlanta</td><td>Torres Trucking</td><td><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">Transit</span></td><td style="color:var(--green);font-weight:700">21%</td></tr><tr><td><span style="font-family:var(--mono);color:var(--purple)">BL-9038</span></td><td>LA → Denver</td><td>Rivera Freight</td><td><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Pickup</span></td><td style="color:var(--green);font-weight:700">17%</td></tr><tr><td><span style="font-family:var(--mono);color:var(--purple)">BL-9035</span></td><td>Dallas → NY</td><td>FastLane LLC</td><td><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Delivered</span></td><td style="color:var(--green);font-weight:700">19%</td></tr></tbody></table></div></div>
-    <div id="bl" class="scr"><div class="phdr"><div><div class="plabel" style="color:var(--purple)">// Loads</div><div class="ptitle">Post & Manage Loads</div></div><button class="btn btn-purple">+ New Load</button></div><div class="card"><table class="tbl"><thead><tr><th>Load ID</th><th>Lane</th><th>Shipper Rate</th><th>Carrier Cost</th><th>Margin</th><th>Status</th></tr></thead><tbody><tr><td><span style="font-family:var(--mono);color:var(--purple)">BL-9041</span></td><td>Chicago → Atlanta</td><td><strong>$4,800</strong></td><td>$3,780</td><td><strong style="color:var(--green)">21.2%</strong></td><td><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">Covered</span></td></tr><tr><td><span style="font-family:var(--mono);color:var(--purple)">BL-9042</span></td><td>Memphis → Miami</td><td><strong>$3,600</strong></td><td>—</td><td><strong style="color:var(--amber)">Open</strong></td><td><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Searching</span></td></tr></tbody></table></div></div>
-    <div id="bc" class="scr"><div class="phdr"><div><div class="plabel" style="color:var(--purple)">// Network</div><div class="ptitle">Carrier Network</div></div><button class="btn btn-purple">+ Invite Carrier</button></div><div class="g2"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-family:var(--display);font-weight:700;color:#fff">Torres Trucking LLC</div><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Available</span></div><div style="font-size:12px;color:var(--t2);margin-bottom:10px">3 trucks · Dry Van · CA/AZ/TX</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px"><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">ON-TIME</div><div style="font-size:16px;font-weight:700;color:var(--green)">98%</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">LOADS</div><div style="font-size:16px;font-weight:700;color:#fff">42</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">AVG RPM</div><div style="font-size:16px;font-weight:700;color:var(--orange)">$3.20</div></div></div><button class="btn btn-purple" style="width:100%">📨 Send Tender</button></div><div class="card"><div style="font-family:var(--display);font-weight:700;color:#fff;margin-bottom:10px">Rivera Freight Inc</div><div style="font-size:12px;color:var(--t2);margin-bottom:10px">1 truck · Southwest lanes</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">ON-TIME</div><div style="font-size:16px;font-weight:700;color:var(--green)">95%</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">LOADS</div><div style="font-size:16px;font-weight:700;color:#fff">28</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">RPM</div><div style="font-size:16px;font-weight:700;color:var(--orange)">$3.45</div></div></div></div></div></div>
-    <div id="bt" class="scr"><div class="phdr"><div><div class="plabel" style="color:var(--purple)">// Dispatch</div><div class="ptitle">Tenders</div></div></div><div class="card"><table class="tbl"><thead><tr><th>Tender</th><th>Load</th><th>Carrier</th><th>Rate</th><th>Response</th></tr></thead><tbody><tr><td><span style="font-family:var(--mono);color:var(--purple)">T-441</span></td><td>BL-9041</td><td>Torres Trucking</td><td><strong>$3,780</strong></td><td><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Accepted ✓</span></td></tr><tr><td><span style="font-family:var(--mono);color:var(--purple)">T-442</span></td><td>BL-9042</td><td>FastLane LLC</td><td><strong>$2,900</strong></td><td><span class="tag" style="background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.2);color:var(--amber)">Pending…</span></td></tr></tbody></table></div></div>
-    <div id="bm" class="scr"><div class="phdr"><div><div class="plabel" style="color:var(--purple)">// Finance</div><div class="ptitle">Margin Analytics</div></div></div><div class="kgrid" style="grid-template-columns:repeat(4,1fr)"><div class="kcard"><div class="klabel">Gross Revenue</div><div class="kval">$142K</div></div><div class="kcard"><div class="klabel">Carrier Costs</div><div class="kval">$115K</div></div><div class="kcard"><div class="klabel">Gross Profit</div><div class="kval" style="color:var(--green)">$26.1K</div></div><div class="kcard"><div class="klabel">Avg Margin</div><div class="kval" style="color:var(--purple)">18.4%</div></div></div></div>
-  </main>
-</div>
-
-<div id="mode-shipper" class="wrap" style="display:none">
-  <aside class="sidebar"><div class="sb-section">Shipper Pro</div>
-    <button class="nitem on" onclick="showSScr('sh',this)"><span class="ni-icon">◈</span><span>Overview</span></button>
-    <button class="nitem" onclick="showSScr('sr',this)"><span class="ni-icon">📋</span><span>RFQ Center</span><span class="ni-badge">3</span></button>
-    <button class="nitem" onclick="showSScr('sc',this)"><span class="ni-icon">🚛</span><span>My Carriers</span></button>
-    <button class="nitem" onclick="showSScr('ss',this)"><span class="ni-icon">💹</span><span>Spend Analysis</span></button>
-  </aside>
-  <main class="main">
-    <div id="sh" class="scr on"><div class="phdr"><div><div class="plabel" style="color:var(--cyan)">// Shipper Pro</div><div class="ptitle">Logistics Overview</div></div><button class="btn" style="background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff">+ New Shipment</button></div>
-    <div class="kgrid"><div class="kcard"><div class="klabel">Shipments MTD</div><div class="kval">34</div><div class="kdelta up" style="color:var(--cyan)">12 in transit</div><div class="kbar"><div class="kfill" style="width:68%;background:var(--cyan)"></div></div></div><div class="kcard"><div class="klabel">Freight Spend</div><div class="kval">$89K</div><div class="kdelta warn">+5% vs budget</div><div class="kbar"><div class="kfill" style="width:85%;background:var(--amber)"></div></div></div><div class="kcard"><div class="klabel">On-Time %</div><div class="kval">96%</div><div class="kdelta up">vs 89% industry</div><div class="kbar"><div class="kfill" style="width:96%;background:var(--green)"></div></div></div><div class="kcard"><div class="klabel">AI Savings</div><div class="kval" style="color:var(--green)">$7.2K</div><div class="kdelta up">vs spot market</div><div class="kbar"><div class="kfill" style="width:42%;background:var(--green)"></div></div></div></div>
-    <div class="card"><div style="font-family:var(--display);font-weight:700;font-size:14px;color:#fff;margin-bottom:12px">Active Shipments</div><table class="tbl"><thead><tr><th>Shipment</th><th>Lane</th><th>Carrier</th><th>Cost</th><th>ETA</th><th>Status</th></tr></thead><tbody><tr><td><span style="font-family:var(--mono);color:var(--cyan)">SH-7701</span></td><td>LA → Chicago</td><td>Torres Trucking</td><td><strong>$3,400</strong></td><td style="color:var(--cyan)">Apr 23</td><td><span class="tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan)">Transit</span></td></tr><tr><td><span style="font-family:var(--mono);color:var(--cyan)">SH-7698</span></td><td>Atlanta → Dallas</td><td>FastLane LLC</td><td><strong>$2,800</strong></td><td style="color:var(--green)">Done</td><td><span class="tag" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--green)">Delivered ✓</span></td></tr></tbody></table></div></div>
-    <div id="sr" class="scr"><div class="phdr"><div><div class="plabel" style="color:var(--cyan)">// Procurement</div><div class="ptitle">RFQ Center</div></div><button class="btn" style="background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff">+ New RFQ</button></div><div class="card"><table class="tbl"><thead><tr><th>RFQ</th><th>Lane</th><th>Best Bid</th><th>Bids</th><th>Action</th></tr></thead><tbody><tr><td><span style="font-family:var(--mono);color:var(--cyan)">RFQ-201</span></td><td>Memphis → Boston</td><td><strong style="color:var(--green)">$4,200</strong></td><td style="color:var(--t2)">4 bids</td><td><button class="btn" style="padding:4px 12px;font-size:11px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff">Award</button></td></tr><tr><td><span style="font-family:var(--mono);color:var(--cyan)">RFQ-202</span></td><td>Houston → LA</td><td><strong style="color:var(--amber)">$3,800</strong></td><td style="color:var(--t2)">2 bids</td><td><button class="btn btn-g" style="padding:4px 12px;font-size:11px">Review</button></td></tr></tbody></table></div></div>
-    <div id="sc" class="scr"><div class="phdr"><div><div class="plabel" style="color:var(--cyan)">// Network</div><div class="ptitle">My Carriers</div></div></div><div class="g2"><div class="card" style="border-color:rgba(0,212,255,.2)"><div style="font-family:var(--display);font-weight:700;color:#fff;margin-bottom:8px">Torres Trucking</div><div style="font-size:12px;color:var(--t2);margin-bottom:10px">Dry Van · CA/TX/IL · Preferred</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">ON-TIME</div><div style="font-size:16px;font-weight:700;color:var(--green)">96%</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">LOADS</div><div style="font-size:16px;font-weight:700;color:#fff">18</div></div></div></div><div class="card"><div style="font-family:var(--display);font-weight:700;color:#fff;margin-bottom:8px">FastLane LLC</div><div style="font-size:12px;color:var(--t2);margin-bottom:10px">Dry Van · East Coast</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">ON-TIME</div><div style="font-size:16px;font-weight:700;color:var(--amber)">91%</div></div><div style="background:var(--bg3);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--t3)">LOADS</div><div style="font-size:16px;font-weight:700;color:#fff">9</div></div></div></div></div></div>
-    <div id="ss" class="scr"><div class="phdr"><div><div class="plabel" style="color:var(--cyan)">// Analytics</div><div class="ptitle">Spend Analysis</div></div></div><div class="kgrid" style="grid-template-columns:repeat(4,1fr)"><div class="kcard"><div class="klabel">MTD Spend</div><div class="kval">$89K</div></div><div class="kcard"><div class="klabel">Budget</div><div class="kval">$85K</div><div class="kdelta dn">+5% over</div></div><div class="kcard"><div class="klabel">AI Savings</div><div class="kval" style="color:var(--green)">$7.2K</div><div class="kdelta up">vs spot</div></div><div class="kcard"><div class="klabel">Avg $/Mile</div><div class="kval">$3.18</div></div></div></div>
-  </main>
-</div>
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="f-logo">FreightIQ<span> USA</span> TMS</div>
+  <p>© 2026 FreightIQ USA · AI-Powered Premium Freight Platform · Building in Public</p>
+  <div class="f-links">
+    <a href="#problem">Problem</a><a href="#pillars">Solution</a><a href="#market">Market</a>
+    <a href="#model">Model</a><a href="#collab">Partner</a><a href="#cta">Contact</a>
+  </div>
+</footer>
 
 <script>
-// Mode switching
-function switchMode(m,btn){
-  document.querySelectorAll('.ttab').forEach(t=>t.classList.remove('on'));
-  btn.classList.add('on');
-  ['carrier','broker','shipper'].forEach(x=>{
-    document.getElementById('mode-'+x).style.display = x===m?'flex':'none';
+/* ── CLOCK ── */
+function clock(){
+  const d=new Date();
+  const el=document.getElementById('tms-clock');
+  if(el) el.textContent=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+clock(); setInterval(clock,1000);
+
+/* ── SCROLL REVEAL ── */
+const revEls=document.querySelectorAll('.reveal');
+const ro=new IntersectionObserver(en=>{
+  en.forEach(e=>{
+    if(e.isIntersecting){
+      [...e.target.children].forEach((c,i)=>{c.style.transitionDelay=i*70+'ms';});
+      e.target.classList.add('in');
+    }
+  });
+},{threshold:.07});
+revEls.forEach(el=>ro.observe(el));
+
+/* ── KPI PULSE ── */
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+setInterval(()=>{
+  const k1=document.getElementById('kpi1');
+  const k2=document.getElementById('kpi2');
+  const k3=document.getElementById('kpi3');
+  if(k1) k1.textContent=rnd(12,18);
+  if(k2) k2.textContent='$'+rnd(7400,12100).toLocaleString();
+  if(k3) k3.textContent=rnd(41,58);
+},5000);
+
+/* ── ROW BLINK ── */
+const rows=document.querySelectorAll('#load-tbody tr');
+let bi=0;
+setInterval(()=>{
+  rows.forEach(r=>r.style.background='');
+  if(rows[bi]){
+    rows[bi].style.background='rgba(34,211,238,.04)';
+    setTimeout(()=>{if(rows[bi])rows[bi].style.background='';},600);
+  }
+  bi=(bi+1)%rows.length;
+},2200);
+
+/* ── REVENUE CHART ── */
+function drawChart(){
+  const canvas=document.getElementById('rev-chart');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||600, H=canvas.offsetHeight||110;
+  canvas.width=W; canvas.height=H;
+  const data=[28400,31200,29800,38600,41200,44800,52900];
+  const labels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const max=Math.max(...data)*1.15;
+  const pad={t:10,r:15,b:22,l:50};
+  const gw=W-pad.l-pad.r, gh=H-pad.t-pad.b;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid lines
+  for(let i=0;i<=4;i++){
+    const y=pad.t+gh-(gh/4)*i;
+    ctx.beginPath();
+    ctx.strokeStyle='rgba(255,255,255,0.05)';
+    ctx.lineWidth=1;
+    ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y);
+    ctx.stroke();
+    ctx.fillStyle='rgba(100,116,139,.7)';
+    ctx.font='9px Inter,sans-serif';
+    ctx.textAlign='right';
+    ctx.fillText('$'+Math.round((max/4)*i/1000)+'K',pad.l-5,y+3);
+  }
+
+  // Area fill
+  const bw=gw/data.length;
+  const pts=data.map((v,i)=>({x:pad.l+i*bw+bw/2,y:pad.t+gh-((v/max)*gh)}));
+
+  const grad=ctx.createLinearGradient(0,pad.t,0,H);
+  grad.addColorStop(0,'rgba(37,99,235,0.3)');
+  grad.addColorStop(1,'rgba(37,99,235,0.02)');
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x,H-pad.b);
+  pts.forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.lineTo(pts[pts.length-1].x,H-pad.b);
+  ctx.closePath();
+  ctx.fillStyle=grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle='rgba(96,165,250,0.9)';
+  ctx.lineWidth=2.5;
+  ctx.lineJoin='round';
+  ctx.stroke();
+
+  // Dots
+  pts.forEach((p,i)=>{
+    const isLast=i===pts.length-1;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,isLast?5:3.5,0,Math.PI*2);
+    ctx.fillStyle=isLast?'#22d3ee':'rgba(96,165,250,.8)';
+    ctx.fill();
+    if(isLast){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,8,0,Math.PI*2);
+      ctx.strokeStyle='rgba(34,211,238,.35)';
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+    }
+    // Labels
+    ctx.fillStyle='rgba(100,116,139,.8)';
+    ctx.font='9px Inter,sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(labels[i],p.x,H-pad.b+13);
   });
 }
+window.addEventListener('load',drawChart);
+window.addEventListener('resize',drawChart);
 
-// Carrier screens
-function showScr(mode,id,btn){
-  document.querySelectorAll(`#mode-${mode} .scr`).forEach(s=>s.classList.remove('on'));
-  const t=document.getElementById(`carrier-${id}`)||document.getElementById(id);
-  if(t)t.classList.add('on');
-  if(btn){document.querySelectorAll(`#mode-${mode} .nitem`).forEach(n=>n.classList.remove('on'));btn.classList.add('on')}
-}
-function showBScr(id,btn){
-  document.querySelectorAll('#mode-broker .scr').forEach(s=>s.classList.remove('on'));
-  const t=document.getElementById(id);if(t)t.classList.add('on');
-  document.querySelectorAll('#mode-broker .nitem').forEach(n=>n.classList.remove('on'));if(btn)btn.classList.add('on');
-}
-function showSScr(id,btn){
-  document.querySelectorAll('#mode-shipper .scr').forEach(s=>s.classList.remove('on'));
-  const t=document.getElementById(id);if(t)t.classList.add('on');
-  document.querySelectorAll('#mode-shipper .nitem').forEach(n=>n.classList.remove('on'));if(btn)btn.classList.add('on');
-}
+/* ── USA MAP WITH ROUTES ── */
+function buildMap(){
+  const svg=document.getElementById('usa-map');
+  if(!svg) return;
 
-// AI Chat
-const aiResponses = {
-  'What loads should I book today?':'🎯 Top 2 loads for you today:\n\n1. LA→Phoenix $2,400 / 372 mi = $6.45/mi → NET $1,680 after fuel. Score: 98/100. Book NOW — 8 other carriers are looking at this lane.\n\n2. Ontario→Las Vegas $1,800 / 268 mi = $6.72/mi → NET $1,260. Score: 94/100. Available through Coyote until 2 PM.',
-  'Who owes me money and how much?':'💰 You have 3 open invoices totaling $9,950:\n\n🔴 Echo Global — INV-221 — $3,200 (15 days OVERDUE)\n🟡 TQL — INV-218 — $2,750 (8 days out)\n🟡 CH Robinson — INV-215 — $4,000 (2 days out)\n\nI recommend sending a firm reminder to Echo Global right now. Want me to draft the email?',
-  'Generate my IFTA report for Q1':'📊 Q1 2026 IFTA Report Generated!\n\nCA: 12,840 miles → $312.40 owed\nAZ: 4,210 miles → $182.52 owed\nTX: 3,980 miles → $132.60 owed\nIL: 2,100 miles → $219.45 owed\n\nTotal tax owed: $847.20\nDue: April 30, 2026\n\nReport is ready to download as PDF. Want me to format it for your state\'s submission portal?',
-  'What is my profit this week?':'📈 This Week Summary (Apr 14–21):\n\n4 loads completed\n💵 Gross Revenue: $9,400\n⛽ Fuel Costs: $1,640\n🔧 Other Expenses: $380\n✅ Net Profit: $7,380\n\nBest load: L-4805 Phoenix→Chicago at $5,800\nBest rate/mile: L-4821 LA→Phoenix at $6.45/mi\n\nYou are tracking $31K+ for the month — your best month yet!',
-  'Find me a load from LA to Texas tomorrow':'🔍 Searching DAT for LA→Texas tomorrow...\n\n3 loads found:\n\n1. LA→Dallas · CH Robinson · $3,900 · 1,435 mi · $2.72/mi → Net $2,340\n2. LA→Houston · Echo Global · $4,200 · 1,550 mi · $2.71/mi → Net $2,520\n3. LA→San Antonio · TQL · $3,600 · 1,380 mi · $2.61/mi → Net $2,160\n\nRecommendation: Houston load ($4,200) is best. Want me to book it?',
-  'Draft invoice reminder for Echo Global':'📧 Draft reminder ready:\n\nSubject: Payment Reminder — Invoice INV-221 ($3,200) — 15 Days Overdue\n\nDear Echo Global Accounts Payable,\n\nThis is a friendly reminder that Invoice INV-221 for $3,200.00 (Load L-4798, completed Mar 21) is now 15 days past due.\n\nPlease process payment at your earliest convenience. If you have any questions, reply to this email.\n\nThank you,\nMike Torres Trucking LLC\n\nShall I send this now?'
-};
+  // City coordinates mapped to ~960×600 viewBox
+  const cities={
+    'Los Angeles': [145,370],
+    'San Francisco': [108,290],
+    'Fresno': [148,320],
+    'Oxnard': [138,355],
+    'Sacramento': [115,280],
+    'Phoenix': [230,400],
+    'Las Vegas': [210,350],
+    'Dallas': [480,435],
+    'Chicago': [598,230],
+    'New York': [780,210],
+    'Boston': [815,185],
+    'Miami': [700,490],
+    'Atlanta': [670,405],
+    'Charlotte': [700,355],
+    'Houston': [510,470],
+    'Denver': [360,290],
+    'Seattle': [135,145],
+    'Portland': [130,170],
+  };
 
-function sendChat(msg){
-  addMsg(msg,'user');
-  setTimeout(()=>{
-    const resp = aiResponses[msg] || '🤖 Great question! Based on your fleet data, I recommend checking the Load Search tab for current DAT rates on that lane. Want me to run a full analysis?';
-    addMsg(resp,'ai');
-  },800);
+  const routes=[
+    {from:'Fresno',to:'Atlanta',type:'reefer',color:'#34d399',active:true},
+    {from:'Los Angeles',to:'Boston',type:'pharma',color:'#22d3ee',active:true},
+    {from:'Dallas',to:'Chicago',type:'health',color:'#60a5fa',active:true},
+    {from:'Oxnard',to:'New York',type:'reefer',color:'#34d399',active:false},
+    {from:'Phoenix',to:'Miami',type:'otr',color:'#a78bfa',active:false},
+    {from:'Sacramento',to:'Charlotte',type:'reefer',color:'#34d399',active:true},
+    {from:'San Francisco',to:'Denver',type:'otr',color:'#a78bfa',active:true},
+    {from:'Houston',to:'Chicago',type:'health',color:'#60a5fa',active:false},
+  ];
+
+  // Draw state outlines (simplified)
+  const stateEl=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  stateEl.setAttribute('x','80');stateEl.setAttribute('y','100');
+  stateEl.setAttribute('width','800');stateEl.setAttribute('height','440');
+  stateEl.setAttribute('rx','4');
+  stateEl.setAttribute('fill','rgba(13,17,32,.6)');
+  stateEl.setAttribute('stroke','rgba(37,99,235,.08)');
+  stateEl.setAttribute('stroke-width','1');
+  svg.appendChild(stateEl);
+
+  // Grid dots
+  for(let x=120;x<880;x+=40){
+    for(let y=120;y<520;y+=40){
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r','1');
+      c.setAttribute('fill','rgba(37,99,235,.12)');
+      svg.appendChild(c);
+    }
+  }
+
+  // Draw routes
+  routes.forEach((r,idx)=>{
+    const a=cities[r.from], b=cities[r.to];
+    if(!a||!b) return;
+
+    // Curve control point
+    const mx=(a[0]+b[0])/2, my=Math.min(a[1],b[1])-(Math.abs(b[0]-a[0])*0.18);
+
+    // Shadow
+    const shadow=document.createElementNS('http://www.w3.org/2000/svg','path');
+    shadow.setAttribute('d',`M${a[0]},${a[1]} Q${mx},${my} ${b[0]},${b[1]}`);
+    shadow.setAttribute('fill','none');
+    shadow.setAttribute('stroke',r.color);
+    shadow.setAttribute('stroke-width','6');
+    shadow.setAttribute('stroke-opacity','0.08');
+    shadow.setAttribute('stroke-linecap','round');
+    svg.appendChild(shadow);
+
+    // Main line
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const len=200+idx*50;
+    path.setAttribute('d',`M${a[0]},${a[1]} Q${mx},${my} ${b[0]},${b[1]}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke',r.color);
+    path.setAttribute('stroke-width',r.active?'2':'1.2');
+    path.setAttribute('stroke-opacity',r.active?'0.85':'0.35');
+    path.setAttribute('stroke-linecap','round');
+    path.setAttribute('stroke-dasharray',r.active?'none':'5,4');
+    svg.appendChild(path);
+
+    // Animated dot on active routes
+    if(r.active){
+      const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('r','4');
+      dot.setAttribute('fill',r.color);
+      dot.setAttribute('filter','url(#glow)');
+      const anim=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
+      anim.setAttribute('dur',(4+idx*0.7)+'s');
+      anim.setAttribute('repeatCount','indefinite');
+      anim.setAttribute('path',`M${a[0]},${a[1]} Q${mx},${my} ${b[0]},${b[1]}`);
+      dot.appendChild(anim);
+      svg.appendChild(dot);
+    }
+  });
+
+  // City dots
+  Object.entries(cities).forEach(([name,[x,y]])=>{
+    const outer=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    outer.setAttribute('cx',x);outer.setAttribute('cy',y);outer.setAttribute('r','5');
+    outer.setAttribute('fill','rgba(37,99,235,.15)');outer.setAttribute('stroke','rgba(37,99,235,.4)');outer.setAttribute('stroke-width','1');
+    svg.appendChild(outer);
+    const inner=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    inner.setAttribute('cx',x);inner.setAttribute('cy',y);inner.setAttribute('r','2.5');
+    inner.setAttribute('fill','#60a5fa');
+    svg.appendChild(inner);
+    const label=document.createElementNS('http://www.w3.org/2000/svg','text');
+    label.setAttribute('x',x);label.setAttribute('y',y-9);
+    label.setAttribute('text-anchor','middle');
+    label.setAttribute('font-size','8');
+    label.setAttribute('font-family','Inter,sans-serif');
+    label.setAttribute('fill','rgba(148,163,184,.75)');
+    label.setAttribute('font-weight','600');
+    label.textContent=name.split(' ')[0];
+    svg.appendChild(label);
+  });
+
+  // Glow filter
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML=`<filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  svg.insertBefore(defs,svg.firstChild);
+
+  // Legend
+  const legendItems=[
+    {color:'#34d399',label:'Reefer/Produce'},
+    {color:'#22d3ee',label:'Pharma Cold'},
+    {color:'#60a5fa',label:'Healthcare'},
+    {color:'#a78bfa',label:'Hot Shot OTR'},
+  ];
+  legendItems.forEach((item,i)=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',88+i*125);line.setAttribute('y1',555);
+    line.setAttribute('x2',108+i*125);line.setAttribute('y2',555);
+    line.setAttribute('stroke',item.color);line.setAttribute('stroke-width','2');
+    g.appendChild(line);
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',98+i*125);dot.setAttribute('cy',555);dot.setAttribute('r','2.5');
+    dot.setAttribute('fill',item.color);
+    g.appendChild(dot);
+    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',112+i*125);txt.setAttribute('y',558.5);
+    txt.setAttribute('font-size','8.5');txt.setAttribute('font-family','Inter,sans-serif');
+    txt.setAttribute('fill','rgba(148,163,184,.8)');txt.setAttribute('font-weight','500');
+    txt.textContent=item.label;
+    g.appendChild(txt);
+    svg.appendChild(g);
+  });
 }
-function sendChatInput(){
-  const inp=document.getElementById('chat-input');
-  const val=inp.value.trim();
-  if(!val)return;
-  addMsg(val,'user');
-  inp.value='';
-  setTimeout(()=>{
-    addMsg('🤖 Analyzing your fleet data for "'+val+'"...\n\nBased on your history: you\'ve run 42 loads this year averaging $5.10/mi. For this query, I recommend booking early in the day — rates tend to drop 12% after 2 PM on DAT. Want me to set up a lane alert?','ai');
-  },900);
-}
-function addMsg(text,type){
-  const msgs=document.getElementById('chat-msgs');
-  const div=document.createElement('div');
-  div.className=`msg ${type}`;
-  div.innerHTML=`<div class="msg-avatar">${type==='ai'?'🤖':'👤'}</div><div class="msg-bubble" style="white-space:pre-line">${text}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-}
+window.addEventListener('load',buildMap);
+
+/* ── NAV ACTIVE ── */
+const secs=document.querySelectorAll('section[id]');
+const navAs=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id;});
+  navAs.forEach(a=>{a.style.color=a.getAttribute('href')==='#'+cur?'var(--white)':'';});
+});
 </script>
 </body>
 </html>
